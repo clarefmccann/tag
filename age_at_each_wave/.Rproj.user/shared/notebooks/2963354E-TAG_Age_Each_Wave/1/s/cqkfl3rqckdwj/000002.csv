@@ -1,0 +1,10 @@
+"0","## Load required packages ##"
+"0","packages <-  c(""tidyverse"", ""lavaan"","
+"0","               ""reshape2"","
+"0","               ""nlme"", ""lme4"","
+"0","               ""data.table"", ""psych"","
+"0","               ""parallel"",""lubridate"","
+"0","               ""mgcv"", ""ggpubr"", ""broom"", ""table1"", ""ggeffects"")"
+"0","lapply(packages, library, character.only = TRUE)"
+"2","Error in (function (srcref)  : unimplemented type (29) in 'eval'
+"

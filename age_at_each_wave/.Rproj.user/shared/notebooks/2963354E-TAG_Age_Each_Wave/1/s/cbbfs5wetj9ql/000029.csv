@@ -1,0 +1,12 @@
+"0","install.packages('ggthemes', dependencies = TRUE)
+"
+"2","also installing the dependencies ‘sass’, ‘jquerylib’, ‘fontBitstreamVera’, ‘fontLiberation’, ‘systemfonts’, ‘httpuv’, ‘htmltools’, ‘sourcetools’, ‘fastmap’, ‘bslib’, ‘cachem’, ‘extrafontdb’, ‘Rttf2pt1’, ‘cyclocomp’, ‘xmlparsedata’, ‘hunspell’, ‘fontquiver’, ‘freetypeharfbuzz’, ‘gdtools’, ‘shiny’, ‘extrafont’, ‘lintr’, ‘maps’, ‘mapproj’, ‘pander’, ‘spelling’, ‘vdiffr’
+
+"
+"1","
+"
+"1",""
+"1","  There is a binary version available but the source version is later"
+"1",""
+"1",":
+"

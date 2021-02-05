@@ -1,0 +1,4 @@
+"0","whole <- full_join(age_all, ace) 
+"
+"2","Joining, by = c(""TAGID"", ""wave"", ""session_date"", ""age"")
+"
