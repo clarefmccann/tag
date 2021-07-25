@@ -1,12 +1,9 @@
 ---
 title: "Age at Each Wave"
-author: "TAG"
+author: "cfm"
 date: "2/4/2021"
 output: html_document
 ---
-
-
-
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(
@@ -26,25 +23,25 @@ packages <-  c("tidyverse", "lavaan",
                "nlme", "lme4",
                "data.table", "psych",
                "parallel","lubridate",
-               "mgcv", "ggpubr", "broom", "table1", "ggeffects", "ggrepel")
+               "mgcv", "ggpubr", "broom", "table1", "ggeffects", "ggrepel", "ggthemes")
 
 lapply(packages, library, character.only = TRUE)
 ```
 
 ```{r Setting root path}
 
-root_path = "~/Desktop/age_at_each_wave/"
+## cfm root path 
+
+root_path = "~/Desktop/Projects/age_at_each_wave/"
 
 ```
 
 ```{r pulling in csv}
 
+## importing doc pulled from redcap with IDs and all session dates 
+
 long_doc <- read.csv(paste0(root_path, "long_doc.csv"),
                      stringsAsFactors = FALSE)
-
-##ace <- read.csv(paste0(root_path, "ACE_Data.csv"),
-                ##stringsAsFactors= FALSE) %>%
-  ##select(TAGID, C_date)
 
 ace <- read.csv(paste0(root_path, "age_ACE.csv"),
                 stringsAsFactors = FALSE)
@@ -55,9 +52,7 @@ dob <- read.csv(paste0(root_path, "TAG_DOB_SessionDates.csv"),
 
 ```
 
-```{r Calculating precise age for both COVID-19 & TAG General Sessions}
-
-## loading in function to calculate precise age 
+```{r loading in function (age_calc) to calculate precise age}
 
 age_calc <- function(dob, enddate=Sys.Date(), units='months', precise=TRUE){
   if (!inherits(dob, "Date") | !inherits(enddate, "Date")) {
@@ -130,11 +125,11 @@ age_calc <- function(dob, enddate=Sys.Date(), units='months', precise=TRUE){
   return(result)
 }
 
+```
 
+```{r Merging and cleaning docs}
 
-ace$session_date <- as.Date(ace$session_date)
-
-## TAG General calulcation
+## TAG General merge
 
 age_all <- full_join(long_doc, dob, by="TAGID") %>%
    filter(!is.na(session_date),
@@ -152,15 +147,6 @@ age_all$age <- age_calc(age_all$DOB, enddate = age_all$session_date, units = "ye
 ## converting ace session dates to date class for merge 
 
 ace$session_date <- as.Date(ace$session_date)
-
-## exporting csv of TAG general ages to clean up outside of R
-
-write.csv(age_all, "age.csv")
-
-
-```
-
-```{r}
 
 ## merging data sets
 
@@ -182,65 +168,33 @@ whole <- whole %>%
 
 whole$wave <- factor(whole$wave, levels=c("W1", "W2", "SOS1", "W3", "COV1", "W4"))
 
+
 ```
 
-```{r}
+```{r actual study design graph w/ shapes !!}
 
-## installing color palette scheme from github created by ciannabp
-
-devtools::install_github("ciannabp/inauguration", force = TRUE)
-
-library(inauguration)
-
-## visualizing data 
-  
-age_at_w <-ggplot(data=whole,
-       aes(x=wave,
-           y=age))+
-  xlab("Time Point")+
-  ylab("Age")+
-  geom_line(aes(group=TAGID),size=.3,alpha=0.3)+
-  geom_point(aes(group=TAGID,colour=wave, shape=wave),size=2,alpha=0.3)+
-  theme(axis.title = element_text(face = "bold"))+
-  scale_color_manual(name = "Wave", values = c("#5445b1", "#749dae", "#f3c483", "#5c1a33", "#cd3341","#f7dc6a")) +
-  theme_minimal()
-
-## saving visualization
-
-ggsave("Age_all_timepoints.tiff", width= 6, height=4, units= 'in', dpi=600)
-
-## changing axes, can't figure out  how to remove text from y axis
-
-age_at_w <-ggplot(data=whole,
-       aes(x=age,
-           y=TAGID))+
-  xlab("Age")+
-  ylab("Participant ID")+
-  geom_line(aes(group=TAGID),size=.3,alpha=0.3)+
-  geom_point(aes(group=TAGID,colour=wave),size=2,alpha=0.3)+
-  theme(axis.title = element_text(face = "bold"),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())+
-  scale_color_manual(name = "Wave", values = c("#5445b1", "#749dae", "#f3c483", "#5c1a33", "#cd3341","#f7dc6a")) +
-  theme_minimal()
-
-## actual study design graph w/ shapes !!
+## sorting IDs by number of timepoints
 
 num_wave <- whole %>% count(TAGID, sort = TRUE)
 
+## creating a doc with just W1 ages 
+
 w1_age <- whole[whole[, 2] == "W1", ]
+
+## sorting IDs by age at W1
 
 w1_age$age_ordered <- w1_age[order(w1_age$age),]
 
-write.csv(w1_age, "w1_age.csv")
+## creating a doc ordering IDs by timepoints, age and ID
 
 study_design <- whole[order(whole$wave, whole$age, whole$TAGID),]
+
+## creating levels using ordered doc 
 
 whole <- study_design %>%
   mutate(Rank_nr=as.numeric(factor(TAGID,levels=unique(TAGID))))
 
-install.packages('ggthemes', dependencies = TRUE)
-library("ggthemes")
+## creating visualization 
 
 tag_study_design_plot<- ggplot(whole,
                            aes(x=age,
@@ -262,10 +216,11 @@ tag_study_design_plot<- ggplot(whole,
   scale_y_discrete(breaks=NULL) +
   theme_minimal()
 
+## viewing plot 
+
 print(tag_study_design_plot)
 
-ggsave(filename="tag_study_design.png",
-       plot=tag_study_design_plot, width=6, height=5, units='in', dpi=300)
+## saving png of plot 
 
 ggsave(filename="tag_study_design_w_shapes.png",
        plot=tag_study_design_plot, width=6, height=5, units='in', dpi=300)
