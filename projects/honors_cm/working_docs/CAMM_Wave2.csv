@@ -1,0 +1,135 @@
+tagid,survey_name,CAMM_1,CAMM_10,CAMM_2,CAMM_3,CAMM_4,CAMM_5,CAMM_6,CAMM_7,CAMM_8,CAMM_9,survey_type,survey_date,CAMM_N,CAMM_missing,CAMM_missing_perc,CAMM_mean,CAMM_W2,wave
+TAG001,W2 Home Qs - Current V1,4,3,4,3,3,3,3,4,2,3,Home,8/24/17,10,0,0,3.2,32,W2
+TAG002,W2 Home Qs - Current V1,2,3,3,4,4,3,3,4,3,3,Home,9/6/17,10,0,0,3.2,32,W2
+TAG003,W2 Home Qs - Current V1,3,3,3,2,3,2,3,3,2,3,Home,3/10/18,10,0,0,2.7,27,W2
+TAG004,W2 - Home Qs - Current V1 IN LAB,2,4,4,1,2,3,2,3,2,3,Home,8/7/17,10,0,0,2.6,26,W2
+TAG005,W2 Home Qs - Current V1,4,4,4,4,4,4,4,4,3,4,Home,5/22/18,10,0,0,3.9,39,W2
+TAG007,W2 Home Qs - Current V1,3,2,2,3,3,3,2,2,3,3,Home,2/13/18,10,0,0,2.6,26,W2
+TAG009,W2 Home Qs - Current V1,1,3,4,3,2,2,0,1,0,2,Home,5/20/18,10,0,0,1.8,18,W2
+TAG010,W2 Home Qs - Current V1,3,3,3,3,3,3,3,3,2,3,Home,2/21/18,10,0,0,2.9,29,W2
+TAG014,W2 Home Qs - Current V1,3,3,3,2,2,2,2,2,3,3,Home,8/10/18,10,0,0,2.5,25,W2
+TAG015,W2 Home Qs - Current V1,3,3,2,3,3,3,2,3,2,3,Home,4/21/18,10,0,0,2.7,27,W2
+TAG016,W2 Home Qs - Current V1,3,2,2,4,3,1,4,2,4,3,Home,10/13/17,10,0,0,2.8,28,W2
+TAG019,W2 Home Qs - Current V1,2,2,1,2,3,2,3,3,1,3,Home,10/8/17,10,0,0,2.2,22,W2
+TAG020,W2 Home Qs - Current V1,3,2,2,2,2,2,3,3,2,3,Home,9/15/17,10,0,0,2.4,24,W2
+TAG022,W2 Home Qs - Current V1,3,3,3,4,3,2,3,3,2,4,Home,8/30/17,10,0,0,3,30,W2
+TAG026,W2 Home Qs - Current V1,3,3,3,3,2,2,4,2,1,2,Home,8/9/17,10,0,0,2.5,25,W2
+TAG027,W2 Home Qs - Current V1,2,3,2,3,2,3,1,2,2,3,Home,1/17/18,10,0,0,2.3,23,W2
+TAG028,W2 Home Qs - Current V1,1,2,4,2,2,2,1,2,2,2,Home,2/16/18,10,0,0,2,20,W2
+TAG030,W2 Home Qs - Current V1,4,3,3,3,3,2,2,4,3,3,Home,8/22/17,10,0,0,3,30,W2
+TAG032,W2 Home Qs - Current V1,1,1,1,1,1,1,1,1,1,1,Home,2/8/18,10,0,0,1,10,W2
+TAG033,W2 Home Qs - Current V1,1,2,2,1,1,2,2,1,1,1,Home,9/15/17,10,0,0,1.4,14,W2
+TAG034,W2 Home Qs - Current V1,1,2,3,1,1,3,1,1,1,2,Home,10/7/17,10,0,0,1.6,16,W2
+TAG036,W2 Home Qs - Current V1,3,1,3,4,4,1,2,4,2,4,Home,2/15/18,10,0,0,2.8,28,W2
+TAG037,W2 Home Qs - Current V1,4,4,2,4,4,3,4,4,2,4,Home,10/24/17,10,0,0,3.5,35,W2
+TAG038,W2 Home Qs - Current V1,4,4,4,4,0,2,2,3,3,4,Home,3/23/18,10,0,0,3,30,W2
+TAG040,W2 Home Qs - Current V1,4,3,4,4,2,3,3,2,3,3,Home,4/20/18,10,0,0,3.1,31,W2
+TAG041,W2 Home Qs - Current V1,4,3,4,3,3,3,4,4,4,4,Home,12/16/17,10,0,0,3.6,36,W2
+TAG042,W2 Home Qs - Current V1,3,3,4,3,2,2,4,4,0,4,Home,2/14/18,10,0,0,2.9,29,W2
+TAG044,W2 Home Qs - Current V1,1,2,2,1,3,2,2,1,1,1,Home,11/10/17,10,0,0,1.6,16,W2
+TAG045,W2 Home Qs - Current V1,4,4,4,4,4,4,4,4,2,4,Home,12/3/17,10,0,0,3.8,38,W2
+TAG046,W2 - Home Qs - Current V1 IN LAB,4,4,4,4,4,4,4,4,4,4,Home,4/7/18,10,0,0,4,40,W2
+TAG047,W2 Home Qs - Current V1,4,4,4,4,4,4,4,4,4,4,Home,4/7/18,10,0,0,4,40,W2
+TAG048,W2 Home Qs - Current V1,1,3,2,2,2,1,1,1,3,2,Home,6/6/18,10,0,0,1.8,18,W2
+TAG049,W2 Home Qs - Current V1,2,2,4,2,2,2,2,2,2,2,Home,3/17/18,10,0,0,2.2,22,W2
+TAG050,W2 Home Qs - Current V1,1,4,1,3,2,1,4,4,0,2,Home,11/21/17,10,0,0,2.2,22,W2
+TAG051,W2 - Home Qs - Current V1 IN LAB,4,4,4,4,4,4,4,4,4,4,Home,9/22/17,10,0,0,4,40,W2
+TAG052,W2 Home Qs - Current V1,1,3,2,2,4,3,3,2,2,2,Home,10/21/17,10,0,0,2.4,24,W2
+TAG053,W2 - Home Qs - Current V1 IN LAB,4,4,1,1,1,1,4,4,4,2,Home,1/8/18,10,0,0,2.6,26,W2
+TAG054,W2 Home Qs - Current V1,4,3,4,4,4,4,3,4,4,4,Home,11/17/17,10,0,0,3.8,38,W2
+TAG055,W2 Home Qs - Current V1,2,3,3,4,4,3,2,3,2,3,Home,10/29/17,10,0,0,2.9,29,W2
+TAG056,W2 Home Qs - Current V1,4,2,3,3,2,1,2,3,2,2,Home,3/26/18,10,0,0,2.4,24,W2
+TAG058,W2 Home Qs - Current V1,1,1,1,1,1,2,3,1,1,2,Home,2/25/18,10,0,0,1.4,14,W2
+TAG059,W2 Home Qs - Current V1,3,3,4,4,2,3,3,2,2,2,Home,10/27/17,10,0,0,2.8,28,W2
+TAG060,W2 Home Qs - Current V1,4,4,4,4,4,3,3,4,4,4,Home,11/4/17,10,0,0,3.8,38,W2
+TAG062,W2 - Home Qs - Current V1 IN LAB,3,2,4,4,2,2,3,2,2,3,Home,3/29/18,10,0,0,2.7,27,W2
+TAG064,W2 - Home Qs - Current V1 IN LAB,4,3,2,4,4,1,4,4,3,4,Home,12/3/17,10,0,0,3.3,33,W2
+TAG065,W2 Home Qs - Current V1,3,2,2,3,4,2,3,4,3,3,Home,12/5/17,10,0,0,2.9,29,W2
+TAG067,W2 Home Qs - Current V1,3,3,3,3,3,3,2,4,3,4,Home,9/14/17,10,0,0,3.1,31,W2
+TAG068,W2 - Home Qs - Current V1 IN LAB,4,4,4,3,4,4,4,4,3,4,Home,8/6/18,10,0,0,3.8,38,W2
+TAG070,W2 Home Qs - Current V1,1,3,2,2,3,1,1,3,1,2,Home,2/23/18,10,0,0,1.9,19,W2
+TAG071,W2 Home Qs - Current V1,3,4,4,4,4,3,4,4,2,4,Home,3/28/18,10,0,0,3.6,36,W2
+TAG072,W2 Home Qs - Current V1,3,3,2,3,3,3,3,3,3,3,Home,11/30/18,10,0,0,2.9,29,W2
+TAG074,W2 Home Qs - Current V1,2,2,1,2,3,2,2,2,1,2,Home,4/14/19,10,0,0,1.9,19,W2
+TAG075,W2 Home Qs - Current V1,2,3,3,2,2,1,3,3,2,3,Home,5/17/18,10,0,0,2.4,24,W2
+TAG077,W2 Home Qs - Current V1,4,4,4,4,4,4,2,4,1,4,Home,1/26/19,10,0,0,3.5,35,W2
+TAG078,W2 Home Qs - Current V1,2,2,1,2,3,1,2,2,2,2,Home,5/5/18,10,0,0,1.9,19,W2
+TAG079,W2 Home Qs - Current V1,2,1,3,0,1,2,0,2,1,2,Home,6/8/18,10,0,0,1.4,14,W2
+TAG080,W2 Home Qs - Current V1,4,4,4,4,4,4,3,4,3,4,Home,8/19/18,10,0,0,3.8,38,W2
+TAG081,W2 Home Qs - Current V1,4,4,2,2,2,2,2,2,2,2,Home,3/9/19,10,0,0,2.4,24,W2
+TAG084,W2 Home Qs - Current V1,3,2,3,1,3,1,2,1,1,2,Home,11/27/17,10,0,0,1.9,19,W2
+TAG085,W2 Home Qs - Current V1,1,3,0,0,0,0,2,2,2,3,Home,2/2/18,10,0,0,1.3,13,W2
+TAG086,W2 Home Qs - Current V1,3,1,2,4,3,1,4,2,2,NA,Home,11/26/17,10,1,10,2.444444444,NA,W2
+TAG087,W2 Home Qs - Current V1,3,3,4,3,3,2,2,3,2,3,Home,5/24/19,10,0,0,2.8,28,W2
+TAG088,W2 Home Qs - Current V1,3,4,3,2,3,3,2,2,3,3,Home,4/16/18,10,0,0,2.8,28,W2
+TAG089,W2 Home Qs - Current V1,2,2,2,2,3,2,2,3,2,2,Home,12/7/17,10,0,0,2.2,22,W2
+TAG090,W2 Home Qs - Current V1,4,4,3,4,4,3,4,4,3,3,Home,12/27/17,10,0,0,3.6,36,W2
+TAG091,W2 - Home Qs - Current V1 IN LAB,0,3,2,2,1,2,1,3,1,1,Home,9/16/18,10,0,0,1.6,16,W2
+TAG093,W2 Home Qs - Current V1,2,4,4,1,4,2,2,3,2,3,Home,3/9/18,10,0,0,2.7,27,W2
+TAG094,W2 Home Qs - Current V1,4,4,4,4,4,1,4,4,4,4,Home,11/25/17,10,0,0,3.7,37,W2
+TAG095,W2 Home Qs - Current V1,4,2,3,4,3,2,3,2,2,3,Home,12/2/18,10,0,0,2.8,28,W2
+TAG098,W2 Home Qs - Current V1,3,2,3,3,2,1,2,3,2,3,Home,4/26/18,10,0,0,2.4,24,W2
+TAG099,W2 Home Qs - Current V1,4,4,4,4,4,NA,4,4,4,4,Home,8/2/18,10,1,10,4,NA,W2
+TAG100,W2 Home Qs - Current V1,2,4,4,3,4,3,4,1,2,4,Home,4/8/18,10,0,0,3.1,31,W2
+TAG101,W2 Home Qs - Current V1,3,3,2,2,3,2,3,3,2,3,Home,9/12/18,10,0,0,2.6,26,W2
+TAG102,W2 Home Qs - Current V1,0,3,1,2,2,3,2,1,0,1,Home,5/16/18,10,0,0,1.5,15,W2
+TAG104,W2 Home Qs - Current V1,2,2,3,3,2,1,2,1,1,2,Home,4/13/18,10,0,0,1.9,19,W2
+TAG105,W2 Home Qs - Current V1,3,2,2,3,3,2,2,1,2,2,Home,5/3/18,10,0,0,2.2,22,W2
+TAG107,W2 Home Qs - Current V1,2,2,1,2,3,1,1,3,2,4,Home,11/11/18,10,0,0,2.1,21,W2
+TAG110,W2 Home Qs - Current V1,0,3,3,0,3,2,2,0,2,1,Home,12/16/18,10,0,0,1.6,16,W2
+TAG111,W2 - Home Qs - Current V1 IN LAB,4,3,3,3,4,3,3,4,3,4,Home,7/28/18,10,0,0,3.4,34,W2
+TAG112,W2 - Home Qs - Current V1 IN LAB,4,4,2,4,4,2,0,4,4,4,Home,8/31/18,10,0,0,3.2,32,W2
+TAG113,W2 - Home Qs - Current V1 IN LAB,3,3,3,3,2,2,3,3,3,3,Home,7/30/18,10,0,0,2.8,28,W2
+TAG114,W2 - Home Qs - Current V1 IN LAB,1,2,0,1,1,0,0,1,2,2,Home,7/16/18,10,0,0,1,10,W2
+TAG116,W2 Home Qs - Current V2,3,3,4,3,3,2,3,3,2,3,Home,6/15/19,10,0,0,2.9,29,W2
+TAG117,W2 Home Qs - Current V1,3,3,1,1,2,2,0,2,1,3,Home,7/16/18,10,0,0,1.8,18,W2
+TAG119,W2 Home Qs - Current V1,2,4,2,2,4,3,2,2,1,4,Home,4/15/18,10,0,0,2.6,26,W2
+TAG120,W2 Home Qs - Current V1,4,3,2,3,2,2,2,4,1,3,Home,5/4/19,10,0,0,2.6,26,W2
+TAG124,W2 Home Qs - Current V1,3,4,2,3,4,1,1,4,3,3,Home,4/27/19,10,0,0,2.8,28,W2
+TAG125,W2 Home Qs - Current V1,3,3,2,2,2,2,2,3,2,3,Home,5/12/19,10,0,0,2.4,24,W2
+TAG130,W2 - Home Qs - Current V1 IN LAB,2,4,3,4,4,4,2,2,2,3,Home,5/26/18,10,0,0,3,30,W2
+TAG131,W2 Home Qs - Current V1,0,1,1,1,2,1,0,2,2,3,Home,9/6/18,10,0,0,1.3,13,W2
+TAG132,W2 - Home Qs - Current V1 IN LAB,1,3,1,3,3,3,3,3,3,4,Home,9/16/18,10,0,0,2.7,27,W2
+TAG140,W2 Home Qs - Current V1,2,4,3,4,2,1,0,3,1,3,Home,5/31/18,10,0,0,2.3,23,W2
+TAG143,W2 Home Qs - Current V1,1,2,3,3,2,2,4,3,2,4,Home,5/4/18,10,0,0,2.6,26,W2
+TAG147,W2 Home Qs - Current V2,3,3,2,3,3,2,3,3,3,4,Home,10/12/19,10,0,0,2.9,29,W2
+TAG149,W2 Home Qs - Current V1,2,2,4,2,2,2,3,2,3,2,Home,1/1/18,10,0,0,2.4,24,W2
+TAG159,W2 Home Qs - Current V1,2,2,2,2,2,2,2,4,4,2,Home,2/24/18,10,0,0,2.4,24,W2
+TAG160,W2 Home Qs - Current V1,2,3,3,4,4,1,3,3,3,4,Home,3/10/18,10,0,0,3,30,W2
+TAG166,W2 - Home Qs - Current V1 IN LAB,2,3,2,2,3,2,2,2,3,3,Home,9/28/17,10,0,0,2.4,24,W2
+TAG166,W2 Home Qs - Current V1,2,3,1,2,3,3,3,2,2,4,Home,2/20/19,10,0,0,2.5,25,W2
+TAG169,W2 Home Qs - Current V1,1,1,1,0,1,0,0,1,1,0,Home,6/17/18,10,0,0,0.6,6,W2
+TAG173,W2 - Home Qs - Current V1 IN LAB,4,4,4,3,2,3,1,4,3,4,Home,10/23/18,10,0,0,3.2,32,W2
+TAG174,W2 - Home Qs - Current V1 IN LAB,0,0,0,0,0,0,0,0,0,0,Home,8/13/18,10,0,0,0,0,W2
+TAG176,W2 Home Qs - Current V1,3,1,3,4,4,4,4,4,4,3,Home,11/15/18,10,0,0,3.4,34,W2
+TAG177,W2 Home Qs - Current V1,3,2,2,2,1,1,1,3,0,3,Home,6/22/18,10,0,0,1.8,18,W2
+TAG179,W2 Home Qs - Current V1,4,4,4,4,2,0,2,4,2,2,Home,1/22/19,10,0,0,2.8,28,W2
+TAG180,W2 - Home Qs - Current V1 IN LAB,2,2,1,1,3,1,4,2,3,3,Home,12/8/18,10,0,0,2.2,22,W2
+TAG186,W2 Home Qs - Current V1,3,1,2,3,3,2,3,3,3,3,Home,11/4/18,10,0,0,2.6,26,W2
+TAG188,W2 Home Qs - Current V1,4,4,2,3,4,2,3,4,2,4,Home,3/12/19,10,0,0,3.2,32,W2
+TAG190,W2 Home Qs - Current V1,4,4,2,3,3,2,0,3,4,4,Home,12/13/18,10,0,0,2.9,29,W2
+TAG192,W2 Home Qs - Current V1,4,2,2,3,3,2,4,4,2,2,Home,9/3/18,10,0,0,2.8,28,W2
+TAG194,W2 Home Qs - Current V1,3,2,2,3,3,3,1,3,2,2,Home,8/14/18,10,0,0,2.4,24,W2
+TAG200,W2 Home Qs - Current V1,4,4,4,0,1,0,4,4,0,4,Home,3/19/19,10,0,0,2.5,25,W2
+TAG202,W2 Home Qs - Current V1,2,3,3,2,3,3,2,2,2,3,Home,10/22/18,10,0,0,2.5,25,W2
+TAG203,W2 - Home Qs - Current V2 IN LAB,2,3,0,2,2,2,1,2,3,3,Home,8/9/19,10,0,0,2,20,W2
+TAG205,W2 Home Qs - Current V1,2,1,1,1,1,1,2,2,0,1,Home,11/3/18,10,0,0,1.2,12,W2
+TAG206,W2 Home Qs - Current V1,3,3,2,2,3,3,2,3,2,3,Home,4/13/19,10,0,0,2.6,26,W2
+TAG207,W2 Home Qs - Current V1,4,4,4,4,4,4,3,4,4,4,Home,10/13/18,10,0,0,3.9,39,W2
+TAG208,W2 Home Qs - Current V1,4,4,3,4,4,3,3,4,3,3,Home,11/8/18,10,0,0,3.5,35,W2
+TAG209,W2 - Home Qs - Current V1 IN LAB,2,2,1,1,1,2,1,0,2,1,Home,9/27/18,10,0,0,1.3,13,W2
+TAG210,W2 - Home Qs - Current V1 IN LAB,4,4,4,4,4,2,4,3,2,4,Home,8/8/18,10,0,0,3.5,35,W2
+TAG211,W2 Home Qs - Current V1,0,0,4,4,4,4,0,0,0,0,Home,9/29/18,10,0,0,1.6,16,W2
+TAG218,W2 Home Qs - Current V1,3,1,4,3,4,1,3,3,2,3,Home,5/28/19,10,0,0,2.7,27,W2
+TAG220,W2 Home Qs - Current V1,3,4,1,3,4,3,4,3,2,3,Home,11/30/18,10,0,0,3,30,W2
+TAG223,W2 Home Qs - Current V1,4,2,3,3,3,2,3,3,2,3,Home,4/19/19,10,0,0,2.8,28,W2
+TAG224,W2 Home Qs - Current V1,1,3,1,2,2,3,2,2,1,2,Home,2/15/19,10,0,0,1.9,19,W2
+TAG225,W2 Home Qs - Current V2,1,1,0,1,0,0,0,1,2,1,Home,6/13/19,10,0,0,0.7,7,W2
+TAG232,W2 Home Qs - Current V2,1,3,2,2,3,2,2,2,3,4,Home,10/18/19,10,0,0,2.4,24,W2
+TAG238,W2 Home Qs - Current V2,4,2,3,3,2,2,3,3,2,2,Home,8/1/19,10,0,0,2.6,26,W2
+TAG243,W2 Home Qs - Current V2,2,3,1,3,3,2,1,3,2,3,Home,7/22/19,10,0,0,2.3,23,W2
+TAG247,W2 Home Qs - Current V2,3,3,3,2,4,3,4,3,0,3,Home,7/28/19,10,0,0,2.8,28,W2
+TAG250,W2 Home Qs - Current V2,2,3,1,3,3,3,1,3,3,3,Home,6/12/19,10,0,0,2.5,25,W2
+TAG252,W2 Home Qs - Current V2,4,4,3,4,2,2,3,4,3,2,Home,8/13/19,10,0,0,3.1,31,W2
+TAG261,W2 Home Qs - Current V2,4,1,0,4,4,0,1,4,4,4,Home,9/14/19,10,0,0,2.6,26,W2
+TAG266,W2 Home Qs - Current V2,1,0,4,0,0,0,2,1,1,1,Home,9/17/19,10,0,0,1,10,W2
