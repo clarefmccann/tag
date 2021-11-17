@@ -31,7 +31,7 @@ lapply(packages, library, character.only = TRUE)
 
 ## cfm root path 
 
-root_path = "~/Desktop/projects/age_at_each_wave/"
+root_path = "~/Desktop/Projects/tag/"
 
 ```
 
@@ -47,7 +47,7 @@ ace <- read.csv(paste0(root_path, "age_ACE.csv"),
 
 dob <- read.csv(paste0(root_path, "TAG_DOB_SessionDates.csv"),
                 stringsAsFactors = FALSE) %>%
-  select(TAGID, DOB)
+  select(tagid, dob)
 
 ```
 
@@ -130,18 +130,18 @@ age_calc <- function(dob, enddate=Sys.Date(), units='months', precise=TRUE){
 
 ## TAG General merge
 
-whole <- full_join(long_doc, dob, by="TAGID") %>%
+whole <- full_join(long_doc, dob, by="tagid") %>%
    filter(!is.na(session_date),
-          !is.na(DOB))
+          !is.na(dob))
 
 ## converting to date class
 
-whole$session_date <- as.Date(whole$session_date)
-whole$DOB <- as.Date(whole$DOB)
+whole$session_date <- as.Date(whole$session_date, format = "%m/%d/%Y")
+whole$dob <- as.Date(whole$dob, format = "%m/%d/%Y")
 
 ## calculating age from DOB & session dates
 
-whole$age <- age_calc(whole$DOB, enddate = whole$session_date, units = "years", precise = TRUE)
+whole$age <- age_calc(whole$dob, enddate = whole$session_date, units = "years", precise = TRUE)
 
 ## converting ace session dates to date class for merge 
 
@@ -176,19 +176,19 @@ whole$wave <- factor(whole$wave, levels=c("W1", "W2", "SOS1", "W3", "COV1", "W4"
 
 ## creating a doc ordering IDs by timepoints, age and ID
 
-study_design <- whole[order(whole$wave, whole$age, whole$TAGID),]
+study_design <- whole[order(whole$wave, whole$age, whole$tagid),]
 
 ## creating levels using ordered doc 
 
 whole <- study_design %>%
-  mutate(Rank_nr=as.numeric(factor(TAGID,levels=unique(TAGID))))
+  mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
 
 ## creating visualization 
 
 tag_study_design_plot<- ggplot(whole,
                            aes(x=age,
                                y=Rank_nr,
-                               group=TAGID,
+                               group=tagid,
                                col=wave,
                                shape=wave)) + 
   geom_point(alpha=1) + 
@@ -233,19 +233,76 @@ just_waves <- full_join(just_waves, wave_4)
 
 ## creating a doc ordering IDs by timepoints, age and ID
 
-waves_study_design <- just_waves[order(just_waves$wave, just_waves$age, just_waves$TAGID),]
+waves_study_design <- just_waves[order(just_waves$wave, just_waves$age, just_waves$tagid),]
 
 ## creating levels using ordered doc 
 
 just_waves <- waves_study_design %>%
-  mutate(Rank_nr=as.numeric(factor(TAGID,levels=unique(TAGID))))
+  mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
 
 ## creating visualization 
 
 tag_waves_study_design_plot<- ggplot(just_waves,
                            aes(x=age,
                                y=Rank_nr,
-                               group=TAGID,
+                               group=tagid,
+                               col=wave,
+                               shape=wave)) + 
+  geom_point(alpha=1) + 
+  geom_line(alpha=.4) +
+  theme(axis.text.y = element_blank()) +
+  scale_color_manual(name= "Wave",
+                     labels = c("W1", "W2", "W3",  "W4"),
+                     values = c("#5445b1", "#749dae", "#f3c483", "#5c1a33"))  +
+  scale_shape_manual(name= "Wave",
+              labels= c("W1", "W2",  "W3", "W4"),
+              values = c(0, 1, 2, 5))+
+  ylab("") +
+  xlab("Age (years)")+
+  scale_y_discrete(breaks=NULL) +
+  theme_minimal()
+
+## viewing plot 
+
+print(tag_waves_study_design_plot)
+
+## saving png of plot 
+
+ggsave(filename="tag_waves_tudy_design_w_shapes.png",
+       plot=tag_waves_study_design_plot, width=6, height=5, units='in', dpi=300)
+
+
+
+```
+
+```{r just waves 1-3 + sos!!}
+
+##creating separate w1-w3 + sos doc 
+
+wave_1 <- whole[which(whole$wave == "W1"),]
+wave_2 <- whole[which(whole$wave == "W2"),]
+wave_3 <- whole[which(whole$wave == "W3"),]
+sos <- whole[which(whole$wave == "W4"),]
+
+just_waves <- full_join(wave_1, wave_2)
+just_waves <- full_join(just_waves, wave_3)
+just_waves <- full_join(just_waves, wave_4)
+
+## creating a doc ordering IDs by timepoints, age and ID
+
+waves_study_design <- just_waves[order(just_waves$wave, just_waves$age, just_waves$tagid),]
+
+## creating levels using ordered doc 
+
+just_waves <- waves_study_design %>%
+  mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
+
+## creating visualization 
+
+tag_waves_study_design_plot<- ggplot(just_waves,
+                           aes(x=age,
+                               y=Rank_nr,
+                               group=tagid,
                                col=wave,
                                shape=wave)) + 
   geom_point(alpha=1) + 
@@ -329,4 +386,74 @@ ggsave(filename="ace_study_design_w_shapes.png",
 
 ```
 
+```{r adding session dates for W4 to TAG_DOB}
 
+dob_full <- read.csv(paste0(root_path, "TAG_DOB_SessionDates.csv"),
+                stringsAsFactors = FALSE)
+
+w4_dates_s1 <- read.csv(paste0(root_path, "W4_S1_complete.csv"),
+                stringsAsFactors = FALSE)
+
+w4_dates_s1 <-w4_dates_s1 %>%
+  mutate(no_underscores=paste0("TAG",
+                               substring(tagid,first=5,last=length(tagid))))
+ w4_dates_s1 <- w4_dates_s1[c(-1)]
+ w4_dates_s1 <- w4_dates_s1[c(2,1)]
+ colnames(w4_dates_s1)[1] <- "tagid"
+
+w4_dates_s2 <- read.csv(paste0(root_path, "W4_completed_S2.csv"),
+                stringsAsFactors = FALSE)
+
+w4_dates_s2 <-w4_dates_s2 %>%
+  mutate(no_underscores=paste0("TAG",
+                               substring(tagid,first=5,last=length(tagid))))
+ w4_dates_s2 <- w4_dates_s2[c(-1)]
+ w4_dates_s2 <- w4_dates_s2[c(2,1)]
+ colnames(w4_dates_s2)[1] <- "tagid"
+
+dob_full <- full_join(dob_full, w4_dates_s1, by = "tagid")
+dob_full <- full_join(dob_full, w4_dates_s2, by = "tagid")
+
+dob_full  <- dob_full[c(1,2,3,4,5,6,7,8,17,18,9,10,11,12,13,14,15,16)]
+
+ ## converting to date class
+
+dob_full$W4S1_Date <- as.Date(dob_full$W4S1_Date, "%m/%d/%y")
+dob_full$W4S2_Date <- as.Date(dob_full$W4S2_Date, "%m/%d/%y")
+dob_full$dob <- as.Date(dob_full$dob, "%m/%d/%y")
+
+## calculating age from DOB & session dates
+
+w4s1_age <- dob_full %>%
+  filter(!is.na(dob_full$W4S1_Date))
+
+w4s1_age <- w4s1_age %>%
+  select(tagid, dob, W4S1_Date)
+
+w4s1_age$W4S1_Age <- age_calc(w4s1_age$dob, enddate = w4s1_age$W4S1_Date, units = "years", precise = TRUE)
+
+w4s2_age <- dob_full %>%
+  filter(!is.na(dob_full$W4S2_Date))
+
+w4s2_age <- w4s2_age %>%
+  select(tagid, dob, W4S2_Date)
+
+w4s2_age$W4S2_Age <- age_calc(w4s2_age$dob, enddate = w4s2_age$W4S2_Date, units = "years", precise = TRUE)
+
+w4s1_age <- w4s1_age %>%
+  select(-dob,-W4S1_Date)
+
+w4s2_age <- w4s2_age %>%
+  select(-dob,-W4S2_Date)
+
+dob_full <- full_join(dob_full, w4s1_age, by = "tagid")
+dob_full <- full_join(dob_full, w4s2_age, by = "tagid")
+
+dob_full <- dob_full[-c(19,20)]
+colnames(dob_full)[17] <- "W4S1_Age"
+colnames(dob_full)[18] <- "W4S2_Age"
+
+write.csv(dob_full, file = "TAG_DOB_SessionDates.csv")
+
+
+```
