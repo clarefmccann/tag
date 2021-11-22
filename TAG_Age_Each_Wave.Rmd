@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 # load packages
 
 library(pacman)
-pacman::p_load(dplyr, ggplot, install = TRUE)
+pacman::p_load(dplyr, ggplot2, install = TRUE)
 
 ```
 
@@ -27,7 +27,8 @@ pacman::p_load(dplyr, ggplot, install = TRUE)
 
 ## cfm root path 
 
-root_path = "~/Desktop/Repos/tag/"
+# root_path = "~/Desktop/Repos/tag/"
+root_path = "~/Desktop/projects/tag/"
 
 ```
 
@@ -221,11 +222,11 @@ ggsave(filename="tag_study_design_w_shapes.png",
 wave_1 <- whole[which(whole$wave == "W1"),]
 wave_2 <- whole[which(whole$wave == "W2"),]
 wave_3 <- whole[which(whole$wave == "W3"),]
-wave_4 <- whole[which(whole$wave == "W4"),]
+#wave_4 <- whole[which(whole$wave == "W4"),]
 
 just_waves <- full_join(wave_1, wave_2)
 just_waves <- full_join(just_waves, wave_3)
-just_waves <- full_join(just_waves, wave_4)
+#just_waves <- full_join(just_waves, wave_4)
 
 ## creating a doc ordering IDs by timepoints, age and ID
 
@@ -248,11 +249,11 @@ tag_waves_study_design_plot<- ggplot(just_waves,
   geom_line(alpha=.4) +
   theme(axis.text.y = element_blank()) +
   scale_color_manual(name= "Wave",
-                     labels = c("W1", "W2", "W3",  "W4"),
-                     values = c("#5445b1", "#749dae", "#f3c483", "#5c1a33"))  +
+                     labels = c("W1", "W2", "W3"),
+                     values = c("#5445b1", "#5c1a33", "#f3c483"))  +
   scale_shape_manual(name= "Wave",
-              labels= c("W1", "W2",  "W3", "W4"),
-              values = c(0, 1, 2, 5))+
+              labels= c("W1", "W2",  "W3"),
+              values = c(0, 1, 2))+
   ylab("") +
   xlab("Age (years)")+
   scale_y_discrete(breaks=NULL) +
@@ -264,8 +265,8 @@ print(tag_waves_study_design_plot)
 
 ## saving png of plot 
 
-ggsave(filename="tag_waves_tudy_design_w_shapes.png",
-       plot=tag_waves_study_design_plot, width=6, height=5, units='in', dpi=300)
+ggsave(filename="tag_wave_study_design.png",
+       plot=tag_waves_study_design_plot, width=6, height=5, units='in', dpi=300, bg = "transparent")
 
 
 
@@ -304,6 +305,7 @@ tag_waves_sos_design_plot<- ggplot(waves_sos,
   geom_point(alpha=1) + 
   geom_line(alpha=.4) +
   theme(axis.text.y = element_blank()) +
+  expand_limits(y=c(0,186))+
   scale_color_manual(name= "Wave",
                      labels = c("W1", "W2", "SOS","W3"),
                      values = c("#5445b1", "#749dae", "#ff8c00", "#5c1a33"))  +
@@ -313,7 +315,8 @@ tag_waves_sos_design_plot<- ggplot(waves_sos,
   ylab("") +
   xlab("Age (years)")+
   scale_y_discrete(breaks=NULL) +
-  theme_minimal()
+  theme_minimal() 
+  
 
 ## viewing plot 
 
@@ -322,7 +325,7 @@ print(tag_waves_sos_design_plot)
 ## saving png of plot 
 
 ggsave(filename="tag_waves_sos_design_w_shapes.png",
-       plot=tag_waves_sos_design_plot, width=6, height=5, units='in', dpi=600)
+       plot=tag_waves_sos_design_plot, width=5, height=5, units='in', dpi=600)
 
 
 
