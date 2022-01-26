@@ -1,0 +1,83 @@
+---
+title: "missing_tag"
+author: "cfm"
+date: "12/1/2021"
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    highlight: tango
+    theme: united
+    toc: yes
+    toc_float:
+      collapsed: yes
+      smooth_scroll: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, cache = FALSE, fig.path = "figs/", dpi = 300)
+```
+
+# load packages
+```{r}
+
+library(pacman)
+pacman::p_load(ggplot2, stargazer, nlme, dplyr, lme4, mgcv, data.table, parallel, install = TRUE)
+
+```
+
+## setting root path 
+
+```{r root path}
+
+root_path = "~/Desktop/Projects/tag_missing/"
+
+```
+
+## loading in docs 
+```{r}
+
+data <- read.csv(paste0(root_path, "missing_age_plot.csv")) %>%
+  filter(!is.na(Age))
+
+```
+
+```{r}
+
+data$groups <- cut(data$Age, breaks=c(9,11,12,13,14,15,16,17,18),
+                   labels=c("10-11","11-12","12-13","13-14", "14-15", "15-16","16-17","17-18"))
+
+data$count_var <- data$groups
+
+data <- data %>% 
+  mutate(count_var=ifelse(count_var=="10-11", 104,
+                      ifelse(count_var=="11-12", 169,
+                             ifelse(count_var=="12-13", 218,
+                                    ifelse(count_var=="13-14", 219,
+                                           ifelse(count_var=="14-15",197,
+                                                  ifelse(count_var=="15-16", 159,
+                                                         ifelse(count_var=="16-17",85,
+                                                                ifelse(count_var=="17-18",64,
+                                                                      count_var))))))))) 
+
+data$Data <- as.factor(data$Data)
+data$Data <- factor(data$Data, levels= c("0","1"))
+
+data <- data %>%
+  mutate(Data=ifelse(Data=="0","No data",
+                     ifelse(Data=="1", "Data",
+                            Data)))
+           
+
+plot <- ggplot(data, aes(x=groups,
+                         fill=Data)) +
+  geom_bar(position = "stack", stat = "count") 
+
+print(plot)
+
+ggsave(filename = "tag_missingness_age.png", plot = plot, width=6, height=5, units='in', dpi=300)
+
+```
+
