@@ -3,9 +3,4 @@
 .RData
 .Ruserdata
 .DS_Store
-study_design/age_ACE.csv
-study_design/long_doc.csv
-study_design/TAG_DOB_SessionDates.csv
-study_design/W4_S1_complete.csv
-study_design/W4_completed_S2.csv
-tag_missing/missing_age_plot.csv
+*.csv
