@@ -2,8 +2,22 @@
 title: "Age at Each Wave"
 author: "cfm"
 date: "2/4/2021"
-output: html_document
+output:
+	html_document:
+		toc: TRUE
+		toc_float: TRUE
+		number_sections: TRUE
+		theme: superhero
+		highlight: default
+		fig_width: 7
+		fig_height: 6
+		fig_caption: TRUE
+		df_print: paged
+		code_folding: hide
 ---
+
+## Setting up markdown {.tabset}
+
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(
@@ -13,6 +27,7 @@ knitr::opts_chunk$set(
 )
 
 ```
+### loading required packages
 
 ```{r Load Required Packages, message=FALSE, warning=FALSE, include=FALSE}
 
@@ -23,18 +38,21 @@ pacman::p_load(dplyr, ggplot2, install = TRUE)
 
 ```
 
+### setting root path
+
 ```{r Setting root path}
 
-## cfm root path 
+## cfm root path
 
 # root_path = "~/Desktop/Repos/tag/"
 root_path = "~/Desktop/projects/tag/"
 
 ```
+### pulling in data
 
 ```{r pulling in csv}
 
-## importing doc pulled from redcap with IDs and all session dates 
+## importing doc pulled from redcap with IDs and all session dates
 
 long_doc <- read.csv(paste0(root_path, "long_doc.csv"),
                      stringsAsFactors = FALSE)
@@ -47,6 +65,7 @@ dob <- read.csv(paste0(root_path, "TAG_DOB_SessionDates.csv"),
   select(tagid, dob)
 
 ```
+### loading in age calc function
 
 ```{r loading in function (age_calc) to calculate precise age}
 
@@ -122,6 +141,7 @@ age_calc <- function(dob, enddate=Sys.Date(), units='months', precise=TRUE){
 }
 
 ```
+## Cleaning data {.tabset}
 
 ```{r Merging and cleaning docs}
 
@@ -140,13 +160,13 @@ whole$dob <- as.Date(whole$dob, format = "%m/%d/%Y")
 
 whole$age <- age_calc(whole$dob, enddate = whole$session_date, units = "years", precise = TRUE)
 
-## converting ace session dates to date class for merge 
+## converting ace session dates to date class for merge
 
 #ace$session_date <- as.Date(ace$session_date)
 
 ## merging data sets
 
-#whole <- full_join(age_all, ace) 
+#whole <- full_join(age_all, ace)
 
 ## renaming wave labels to be more readable
 
@@ -160,7 +180,7 @@ whole <- whole %>%
                                                               ifelse(wave=="C2","COV2",
                                                                      ifelse(wave=="C3", "COV3",
                               wave))))))))) %>%
-  mutate(wave=as.factor(wave)) 
+  mutate(wave=as.factor(wave))
 
 ## reordering levels
 
@@ -175,20 +195,20 @@ whole$wave <- factor(whole$wave, levels=c("W1", "W2", "SOS1", "W3", "COV1", "W4"
 
 study_design <- whole[order(whole$wave, whole$age, whole$tagid),]
 
-## creating levels using ordered doc 
+## creating levels using ordered doc
 
 whole <- study_design %>%
   mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
 
-## creating visualization 
+## creating visualization
 
 tag_study_design_plot<- ggplot(whole,
                            aes(x=age,
                                y=Rank_nr,
                                group=tagid,
                                col=wave,
-                               shape=wave)) + 
-  geom_point(alpha=1) + 
+                               shape=wave)) +
+  geom_point(alpha=1) +
   geom_line(alpha=.4) +
   theme(axis.text.y = element_blank()) +
   scale_color_manual(name= "Wave",
@@ -202,11 +222,11 @@ tag_study_design_plot<- ggplot(whole,
   scale_y_discrete(breaks=NULL) +
   theme_minimal()
 
-## viewing plot 
+## viewing plot
 
 print(tag_study_design_plot)
 
-## saving png of plot 
+## saving png of plot
 
 ggsave(filename="tag_study_design_w_shapes.png",
        plot=tag_study_design_plot, width=6, height=5, units='in', dpi=300)
@@ -217,7 +237,7 @@ ggsave(filename="tag_study_design_w_shapes.png",
 
 ```{r just waves!!}
 
-##creating separate w1-w4 doc 
+##creating separate w1-w4 doc
 
 wave_1 <- whole[which(whole$wave == "W1"),]
 wave_2 <- whole[which(whole$wave == "W2"),]
@@ -232,20 +252,20 @@ just_waves <- full_join(just_waves, wave_3)
 
 waves_study_design <- just_waves[order(just_waves$wave, just_waves$age, just_waves$tagid),]
 
-## creating levels using ordered doc 
+## creating levels using ordered doc
 
 just_waves <- waves_study_design %>%
   mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
 
-## creating visualization 
+## creating visualization
 
 tag_waves_study_design_plot<- ggplot(just_waves,
                            aes(x=age,
                                y=Rank_nr,
                                group=tagid,
                                col=wave,
-                               shape=wave)) + 
-  geom_point(alpha=1) + 
+                               shape=wave)) +
+  geom_point(alpha=1) +
   geom_line(alpha=.4) +
   theme(axis.text.y = element_blank()) +
   scale_color_manual(name= "Wave",
@@ -259,11 +279,11 @@ tag_waves_study_design_plot<- ggplot(just_waves,
   scale_y_discrete(breaks=NULL) +
   theme_minimal()
 
-## viewing plot 
+## viewing plot
 
 print(tag_waves_study_design_plot)
 
-## saving png of plot 
+## saving png of plot
 
 ggsave(filename="tag_wave_study_design.png",
        plot=tag_waves_study_design_plot, width=6, height=5, units='in', dpi=300, bg = "transparent")
@@ -274,7 +294,7 @@ ggsave(filename="tag_wave_study_design.png",
 
 ```{r just waves 1-3 + sos!!}
 
-##creating separate w1-w3 + sos doc 
+##creating separate w1-w3 + sos doc
 
 wave_1 <- whole[which(whole$wave == "W1"),]
 wave_2 <- whole[which(whole$wave == "W2"),]
@@ -289,20 +309,20 @@ waves_sos <- full_join(waves_sos, sos)
 
 waves_sos_design <- waves_sos[order(waves_sos$wave, waves_sos$age, waves_sos$tagid),]
 
-## creating levels using ordered doc 
+## creating levels using ordered doc
 
 waves_sos <- waves_sos_design %>%
   mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
 
-## creating visualization 
+## creating visualization
 
 tag_waves_sos_design_plot<- ggplot(waves_sos,
                            aes(x=age,
                                y=Rank_nr,
                                group=tagid,
                                col=wave,
-                               shape=wave)) + 
-  geom_point(alpha=1) + 
+                               shape=wave)) +
+  geom_point(alpha=1) +
   geom_line(alpha=.4) +
   theme(axis.text.y = element_blank()) +
   expand_limits(y=c(0,186))+
@@ -315,14 +335,14 @@ tag_waves_sos_design_plot<- ggplot(waves_sos,
   ylab("") +
   xlab("Age (years)")+
   scale_y_discrete(breaks=NULL) +
-  theme_minimal() 
-  
+  theme_minimal()
 
-## viewing plot 
+
+## viewing plot
 
 print(tag_waves_sos_design_plot)
 
-## saving png of plot 
+## saving png of plot
 
 ggsave(filename="tag_waves_sos_design_w_shapes.png",
        plot=tag_waves_sos_design_plot, width=5, height=5, units='in', dpi=600)
@@ -341,26 +361,26 @@ ace <- ace %>%
                      ifelse(wave=="C2","COV2",
                             ifelse(wave=="C3", "COV3",
                               wave)))) %>%
-  mutate(wave=as.factor(wave)) 
+  mutate(wave=as.factor(wave))
 
 ## creating a doc ordering IDs by timepoints, age and ID
 
 study_design_ace <- ace[order(ace$wave, ace$age, ace$TAGID),]
 
-## creating levels using ordered doc 
+## creating levels using ordered doc
 
 ace <- study_design_ace %>%
   mutate(Rank_nr=as.numeric(factor(TAGID,levels=unique(TAGID))))
 
-## creating visualization 
+## creating visualization
 
 ace_study_design_plot<- ggplot(ace,
                            aes(x=age,
                                y=Rank_nr,
                                group=TAGID,
                                col=wave,
-                               shape=wave)) + 
-  geom_point(alpha=1) + 
+                               shape=wave)) +
+  geom_point(alpha=1) +
   geom_line(alpha=.4) +
   theme(axis.text.y = element_blank()) +
   scale_color_manual(name= "Wave",
@@ -374,11 +394,11 @@ ace_study_design_plot<- ggplot(ace,
   scale_y_discrete(breaks=NULL) +
   theme_minimal()
 
-## viewing plot 
+## viewing plot
 
 print(ace_study_design_plot)
 
-## saving png of plot 
+## saving png of plot
 
 ggsave(filename="ace_study_design_w_shapes.png",
        plot=ace_study_design_plot, width=6, height=5, units='in', dpi=300)
