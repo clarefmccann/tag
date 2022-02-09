@@ -47,7 +47,7 @@ pacman::p_load(dplyr, ggplot2, install = TRUE)
 ## cfm root path
 
 # root_path = "~/Desktop/Repos/tag/"
-root_path = "~/Desktop/projects/tag/"
+root_path = "~/Desktop/projects/tag/study_design/"
 
 ```
 ### pulling in data
@@ -241,6 +241,11 @@ ggsave(filename="tag_study_design_w_shapes.png",
 
 ##creating separate w1-w4 doc
 
+## FOR HONOR THESIS (CFM) - filtering up until 01/13/2020 
+
+whole <- whole %>%
+  filter(session_date <= as.Date("0020-01-13"))
+
 wave_1 <- whole[which(whole$wave == "W1"),]
 wave_2 <- whole[which(whole$wave == "W2"),]
 wave_3 <- whole[which(whole$wave == "W3"),]
@@ -269,6 +274,7 @@ tag_waves_study_design_plot<- ggplot(just_waves,
                                shape=wave)) +
   geom_point(alpha=1) +
   geom_line(alpha=.4) +
+  expand_limits(y=c(0,186))+
   theme(axis.text.y = element_blank()) +
   scale_color_manual(name= "Wave",
                      labels = c("W1", "W2", "W3"),
@@ -288,7 +294,7 @@ print(tag_waves_study_design_plot)
 ## saving png of plot
 
 ggsave(filename="tag_wave_study_design.png",
-       plot=tag_waves_study_design_plot, width=6, height=5, units='in', dpi=300, bg = "transparent")
+       plot=tag_waves_study_design_plot, width=5, height=5, units='in', dpi=600, bg = "transparent")
 
 
 
