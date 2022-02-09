@@ -1,0 +1,31 @@
+
+<table style="text-align:center"><caption><strong>Self-perceived scholastic competence predicted by prior levels of trait mindfulness</strong></caption>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="2">Self-perceived Scholastic Competence</td></tr>
+<tr><td style="text-align:left"></td><td>Without Mindfulness</td><td>With Mindfulness</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Low SES</td><td>0.193</td><td>0.176</td></tr>
+<tr><td style="text-align:left"></td><td>(1.007)</td><td>(0.786)</td></tr>
+<tr><td style="text-align:left">Middle SES</td><td>-2.000<sup>*</sup></td><td>-1.237</td></tr>
+<tr><td style="text-align:left"></td><td>(1.032)</td><td>(0.794)</td></tr>
+<tr><td style="text-align:left">Age at Menarche</td><td>0.571</td><td>0.108</td></tr>
+<tr><td style="text-align:left"></td><td>(0.398)</td><td>(0.313)</td></tr>
+<tr><td style="text-align:left">Grades - B</td><td>-2.320<sup>***</sup></td><td>-1.599<sup>**</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.750)</td><td>(0.676)</td></tr>
+<tr><td style="text-align:left">Grades - C</td><td>-2.524</td><td>-1.555</td></tr>
+<tr><td style="text-align:left"></td><td>(1.589)</td><td>(1.375)</td></tr>
+<tr><td style="text-align:left">Prior levels of SPPA-SC</td><td>-2.516</td><td>-1.378</td></tr>
+<tr><td style="text-align:left"></td><td>(3.012)</td><td>(2.807)</td></tr>
+<tr><td style="text-align:left">Prior Levels of Trait Mindfulness</td><td></td><td>0.403<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.093)</td></tr>
+<tr><td style="text-align:left">CAMM_lag</td><td></td><td>0.155<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.040)</td></tr>
+<tr><td style="text-align:left">Constant</td><td>9.123<sup>*</sup></td><td>4.393</td></tr>
+<tr><td style="text-align:left"></td><td>(4.931)</td><td>(3.903)</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>94</td><td>94</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-240.853</td><td>-225.548</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>499.706</td><td>473.097</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>522.595</td><td>501.073</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="2" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>

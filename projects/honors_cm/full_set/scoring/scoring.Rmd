@@ -1,0 +1,235 @@
+---
+title: "scoring"
+author: "cfm"
+date: "10/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+```
+
+```{r Load Required Packages, message=FALSE, warning=FALSE, include=FALSE}
+## Load required packages ##
+
+packages <-  c("tidyverse", 
+               "nlme", "lme4",
+               "data.table", 
+               "parallel","lubridate",
+               "mgcv", "ggpubr", "broom",  "ggeffects", "stargazer", "Amelia")
+lapply(packages, library, character.only = TRUE)
+```
+
+Set root path for kate
+```{r}
+#kate's root path
+## root_path="/Volumes/devbrainlab/Clare/honors_cm/"
+```
+
+Set root path for Clare
+```{r}
+
+root_path="~/Desktop/projects/honors_cm/full_set/"
+
+```
+
+
+```{r Load data sets}
+
+##pulling CSV files & calculating cronbach alpha
+
+post_covid_sppa<-read.csv(paste0(root_path,"Post_COVID_SPPA.csv"),
+                  stringsAsFactors = FALSE) 
+
+
+post_covid_camm<-read.csv(paste0(root_path,"Post_COVD_CAMM.csv"),
+                  stringsAsFactors = FALSE) 
+
+```
+
+```{r scoring}
+
+post_covid_sppa <- post_covid_sppa %>%
+  mutate(ha1=ifelse(SPPA_1==0 & SPPA_2==2,4,
+                    ifelse(SPPA_1==0 & SPPA_2==1,3,
+                           ifelse(SPPA_1==2 & SPPA_2==1,2,
+                                      ifelse(SPPA_1==2 & SPPA_2==2,1,
+                                                    NA)))),
+         ha2=ifelse(SPPA_3==0 & SPPA_4==2,1,
+                    ifelse(SPPA_3==0 & SPPA_4==1,2,
+                           ifelse(SPPA_3==2 & SPPA_4==1,3,
+                                      ifelse(SPPA_3==2 & SPPA_4==2,4,
+                                                    NA)))),
+         ha3=ifelse(SPPA_5==0 & SPPA_6==2,4,
+                    ifelse(SPPA_5==0 & SPPA_6==1,3,
+                           ifelse(SPPA_5==2 & SPPA_6==1,2,
+                                      ifelse(SPPA_5==2 & SPPA_6==2,1,
+                                                    NA)))),
+         ha4=ifelse(SPPA_7==0 & SPPA_8==2,1,
+                    ifelse(SPPA_7==0 & SPPA_8==1,2,
+                           ifelse(SPPA_7==2 & SPPA_8==1,3,
+                                      ifelse(SPPA_7==2 & SPPA_8==2,4,
+                                                    NA)))),
+         ha7=ifelse(SPPA_9==0 & SPPA_10==2,4,
+                    ifelse(SPPA_9==0 & SPPA_10==1,3,
+                           ifelse(SPPA_9==2 & SPPA_10==1,2,
+                                      ifelse(SPPA_9==2 & SPPA_10==2,1,
+                                                    NA)))),
+         ha8=ifelse(SPPA_11==0 & SPPA_12==2,4,
+                    ifelse(SPPA_11==0 & SPPA_12==1,3,
+                           ifelse(SPPA_11==2 & SPPA_12==1,2,
+                                      ifelse(SPPA_11==2 & SPPA_12==2,1,
+                                                    NA)))),
+         ha9=ifelse(SPPA_13==0 & SPPA_14==2,1,
+                    ifelse(SPPA_13==0 & SPPA_14==1,2,
+                           ifelse(SPPA_13==2 & SPPA_14==1,3,
+                                      ifelse(SPPA_13==2 & SPPA_14==2,4,
+                                                    NA)))),
+         ha10=ifelse(SPPA_15==0 & SPPA_16==2,1,
+                    ifelse(SPPA_15==0 & SPPA_16==1,2,
+                           ifelse(SPPA_15==2 & SPPA_16==1,3,
+                                      ifelse(SPPA_15==2 & SPPA_16==2,4,
+                                                    NA)))),
+         ha11=ifelse(SPPA_17==0 & SPPA_18==2,4,
+                    ifelse(SPPA_17==0 & SPPA_18==1,3,
+                           ifelse(SPPA_17==2 & SPPA_18==1,2,
+                                      ifelse(SPPA_17==2 & SPPA_18==2,1,
+                                                    NA)))),
+         ha12=ifelse(SPPA_19==0 & SPPA_20==2,4,
+                    ifelse(SPPA_19==0 & SPPA_20==1,3,
+                           ifelse(SPPA_19==2 & SPPA_20==1,2,
+                                      ifelse(SPPA_19==2 & SPPA_20==2,1,
+                                                    NA)))),
+         ha13=ifelse(SPPA_21==0 & SPPA_22==2,1,
+                    ifelse(SPPA_21==0 & SPPA_22==1,2,
+                           ifelse(SPPA_21==2 & SPPA_22==1,3,
+                                      ifelse(SPPA_21==2 & SPPA_22==2,4,
+                                                    NA)))),
+         ha16=ifelse(SPPA_23==0 & SPPA_24==2,1,
+                    ifelse(SPPA_23==0 & SPPA_24==1,2,
+                           ifelse(SPPA_23==2 & SPPA_24==1,3,
+                                      ifelse(SPPA_23==2 & SPPA_24==2,4,
+                                                    NA)))),
+         ha17=ifelse(SPPA_25==0 & SPPA_26==2,1,
+                    ifelse(SPPA_25==0 & SPPA_26==1,2,
+                           ifelse(SPPA_25==2 & SPPA_26==1,3,
+                                      ifelse(SPPA_25==2 & SPPA_26==2,4,
+                                                    NA)))),
+         ha18=ifelse(SPPA_27==0 & SPPA_28==2,1,
+                    ifelse(SPPA_27==0 & SPPA_28==1,2,
+                           ifelse(SPPA_27==2 & SPPA_28==1,3,
+                                      ifelse(SPPA_27==2 & SPPA_28==2,4,
+                                                    NA)))),
+         ha19=ifelse(SPPA_29==0 & SPPA_30==2,4,
+                    ifelse(SPPA_29==0 & SPPA_30==1,3,
+                           ifelse(SPPA_29==2 & SPPA_30==1,2,
+                                      ifelse(SPPA_29==2 & SPPA_30==2,1,
+                                                    NA)))),
+         ha20=ifelse(SPPA_31==0 & SPPA_32==2,1,
+                    ifelse(SPPA_31==0 & SPPA_32==1,2,
+                           ifelse(SPPA_31==2 & SPPA_32==1,3,
+                                      ifelse(SPPA_31==2 & SPPA_32==2,4,
+                                                    NA)))),
+         ha21=ifelse(SPPA_33==0 & SPPA_34==2,4,
+                    ifelse(SPPA_33==0 & SPPA_34==1,3,
+                           ifelse(SPPA_33==2 & SPPA_34==1,2,
+                                      ifelse(SPPA_33==2 & SPPA_34==2,1,
+                                                    NA)))),
+         ha22=ifelse(SPPA_35==0 & SPPA_36==2,1,
+                    ifelse(SPPA_35==0 & SPPA_36==1,2,
+                           ifelse(SPPA_35==2 & SPPA_36==1,3,
+                                      ifelse(SPPA_35==2 & SPPA_36==2,4,
+                                                    NA)))),
+         ha25=ifelse(SPPA_37==0 & SPPA_38==2,4,
+                    ifelse(SPPA_37==0 & SPPA_38==1,3,
+                           ifelse(SPPA_37==2 & SPPA_38==1,2,
+                                      ifelse(SPPA_37==2 & SPPA_38==2,1,
+                                                    NA)))),
+         ha26=ifelse(SPPA_39==1 & SPPA_40==2,4,
+                    ifelse(SPPA_39==1 & SPPA_40==1,3,
+                           ifelse(SPPA_39==2 & SPPA_40==1,2,
+                                      ifelse(SPPA_39==2 & SPPA_40==2,1,
+                                                    NA)))),
+         ha27=ifelse(SPPA_41==1 & SPPA_42==2,4,
+                    ifelse(SPPA_41==1 & SPPA_42==1,3,
+                           ifelse(SPPA_41==2 & SPPA_42==1,2,
+                                      ifelse(SPPA_41==2 & SPPA_42==2,1,
+                                                    NA)))),
+         ha28=ifelse(SPPA_43==1 & SPPA_44==2,1,
+                    ifelse(SPPA_43==1 & SPPA_44==1,2,
+                           ifelse(SPPA_43==2 & SPPA_44==1,3,
+                                      ifelse(SPPA_43==2 & SPPA_44==2,4,
+                                                    NA)))),
+         ha29=ifelse(SPPA_45==1 & SPPA_46==2,4,
+                    ifelse(SPPA_45==1 & SPPA_46==1,3,
+                           ifelse(SPPA_45==2 & SPPA_46==1,2,
+                                      ifelse(SPPA_45==2 & SPPA_46==2,1,
+                                                    NA)))),
+         ha30=ifelse(SPPA_47==1 & SPPA_48==2,1,
+                    ifelse(SPPA_47==1 & SPPA_48==1,2,
+                           ifelse(SPPA_47==2 & SPPA_48==1,3,
+                                      ifelse(SPPA_47==2 & SPPA_48==2,4,
+                                                    NA)))),
+         ha31=ifelse(SPPA_49==1 & SPPA_50==2,4,
+                    ifelse(SPPA_49==1 & SPPA_50==1,3,
+                           ifelse(SPPA_49==2 & SPPA_50==1,2,
+                                      ifelse(SPPA_49==2 & SPPA_50==2,1,
+                                                    NA)))),
+         ha34=ifelse(SPPA_51==1 & SPPA_52==2,1,
+                    ifelse(SPPA_51==1 & SPPA_52==1,2,
+                           ifelse(SPPA_51==2 & SPPA_52==1,3,
+                                      ifelse(SPPA_51==2 & SPPA_52==2,4,
+                                                    NA)))),
+         ha35=ifelse(SPPA_53==0 & SPPA_54==2,1,
+                    ifelse(SPPA_53==0 & SPPA_54==1,2,
+                           ifelse(SPPA_53==2 & SPPA_54==1,3,
+                                      ifelse(SPPA_53==2 & SPPA_54==2,4,
+                                                    NA)))),
+         ha36=ifelse(SPPA_55==0 & SPPA_56==2,4,
+                    ifelse(SPPA_55==0 & SPPA_56==1,3,
+                           ifelse(SPPA_55==2 & SPPA_56==1,2,
+                                      ifelse(SPPA_55==2 & SPPA_56==2,1,
+                                                    NA)))),
+         ha37=ifelse(SPPA_57==0 & SPPA_58==2,4,
+                    ifelse(SPPA_57==0 & SPPA_58==1,3,
+                           ifelse(SPPA_57==2 & SPPA_58==1,2,
+                                      ifelse(SPPA_57==2 & SPPA_58==2,1,
+                                                    NA)))),
+         ha38=ifelse(SPPA_59==0 & SPPA_60==2,4,
+                    ifelse(SPPA_59==0 & SPPA_60==1,3,
+                           ifelse(SPPA_59==2 & SPPA_60==1,2,
+                                      ifelse(SPPA_59==2 & SPPA_60==2,1,
+                                                    NA)))),
+         ha39=ifelse(SPPA_61==0 & SPPA_62==2,1,
+                    ifelse(SPPA_61==0 & SPPA_62==1,2,
+                           ifelse(SPPA_61==2 & SPPA_62==1,3,
+                                      ifelse(SPPA_61==2 & SPPA_62==2,4,
+                                                    NA)))),
+         ha40=ifelse(SPPA_63==0 & SPPA_64==2,4,
+                    ifelse(SPPA_63==0 & SPPA_64==1,3,
+                           ifelse(SPPA_63==2 & SPPA_64==1,2,
+                                      ifelse(SPPA_63==2 & SPPA_64==2,1,
+                                                    NA)))),
+         ha43=ifelse(SPPA_65==0 & SPPA_66==2,4,
+                    ifelse(SPPA_65==0 & SPPA_66==1,3,
+                           ifelse(SPPA_65==2 & SPPA_66==1,2,
+                                      ifelse(SPPA_65==2 & SPPA_66==2,1,
+                                                    NA)))),
+         ha44=ifelse(SPPA_67==0 & SPPA_68==2,1,
+                    ifelse(SPPA_67==0 & SPPA_68==1,2,
+                           ifelse(SPPA_67==2 & SPPA_68==1,3,
+                                      ifelse(SPPA_67==2 & SPPA_68==2,4,
+                                                    NA)))),
+         ha45=ifelse(SPPA_69==0 & SPPA_70==2,4,
+                    ifelse(SPPA_69==0 & SPPA_70==1,3,
+                           ifelse(SPPA_69==2 & SPPA_70==1,2,
+                                      ifelse(SPPA_69==2 & SPPA_70==2,1,
+                                                    NA)))))
+
+write_csv(post_covid_sppa, "post_covid_sppa.csv")
+
+```

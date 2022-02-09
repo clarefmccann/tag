@@ -1,0 +1,37 @@
+"","tagid","survey_name","Income","P_Edu","P_Edu_ch_info","P_Edu_change","P_Edu_TEXT","Spouse_Edu","Spouse_Edu_ch_info","Spouse_Edu_change","Spouse_Edu_TEXT","wave"
+"1","TAG001","W3 Parent - Current V1","4","8","4","1",NA,"3",NA,"0",NA,3
+"2","TAG002","W3 Parent - Current V1","4","7",NA,"0",NA,"5",NA,"0",NA,3
+"3","TAG004","W3 Parent - Current V1","4","8",NA,"0",NA,"5",NA,"0",NA,3
+"4","TAG008","W3 Parent - Current V1","4","8","13","1",NA,"11",NA,"0",NA,3
+"5","TAG020","W3 Parent - Current V1","5","8",NA,"0",NA,"8",NA,"0",NA,3
+"6","TAG022","W3 Parent - Current V1","3","4","1","1",NA,"6",NA,"0",NA,3
+"7","TAG026","W3 Parent - Current V1","5","9",NA,"0",NA,"9","1.5 years","1",NA,3
+"8","TAG027","W3 Parent - Current V2","5","8",NA,"0",NA,"5",NA,"0",NA,3
+"9","TAG030","W3 Parent - Current V1","5","9",NA,"0",NA,"8",NA,"0",NA,3
+"10","TAG033","W3 Parent - Current V1","3","8",NA,"0",NA,"8",NA,"0",NA,3
+"11","TAG034","W3 Parent - Current V1","4","7",NA,"0",NA,"8",NA,"0",NA,3
+"12","TAG035","W3 Parent - Current V1","4","8",NA,"0",NA,"8","9","1",NA,3
+"13","TAG037","W3 Parent - Current V1","3","9","2.5 years","1",NA,"9",NA,"0",NA,3
+"14","TAG041","W3 Parent - Current V1","5","9",NA,"0",NA,"8",NA,"0",NA,3
+"15","TAG044","W3 Parent - Current V1","5","9","3; 5; and 7","1",NA,"5",NA,"0",NA,3
+"16","TAG045","W3 Parent - Current V2","1","7","6","1",NA,NA,NA,NA,NA,3
+"17","TAG050","W3 Parent - Current V1","4","5",NA,"0",NA,"7","12","1",NA,3
+"18","TAG051","W3 Parent - Current V1","3","7","6","1",NA,"8",NA,"0",NA,3
+"19","TAG053","W3 Parent - Current V1","4","5",NA,"0",NA,"7","hes still getting his degree","1",NA,3
+"20","TAG054","W3 Parent - Current V2","2","6",NA,"0",NA,"6","pilot license/(has private now working on commercial and certified flight instructor)","1",NA,3
+"21","TAG055","W3 Parent - Current V1","5","8",NA,"0",NA,"5",NA,"0",NA,3
+"22","TAG057","W3 Parent - Current V1","3","11",NA,"0",NA,"5",NA,"0",NA,3
+"23","TAG058","W3 Parent - Current V1","1","5",NA,"0",NA,NA,NA,NA,NA,3
+"24","TAG059","W3 Parent - Current V2","3","8",NA,"0",NA,"5",NA,"0",NA,3
+"25","TAG060","W3 Parent - Current V1","5","5",NA,"0",NA,"5",NA,"0",NA,3
+"26","TAG064","W3 Parent - Current V1","2","5",NA,"0",NA,"-9",NA,"0",NA,3
+"27","TAG065","W3 Parent - Current V1","4","8","4","1",NA,"5",NA,"0",NA,3
+"28","TAG066","W3 Parent - Current V2","5","9","2","1",NA,"10",NA,"0",NA,3
+"29","TAG067","W3 Parent - Current V1","4","5",NA,"0",NA,"5","she will be 16; in 2020 he will get his degree ","1",NA,3
+"30","TAG069","W3 Parent - Current V1","3","9",NA,"0",NA,"11",NA,"0",NA,3
+"31","TAG084","W3 Parent - Current V1","5","6",NA,"0",NA,"4",NA,"0",NA,3
+"32","TAG085","W3 Parent - Current V2","7","8",NA,"0",NA,"5",NA,"0",NA,3
+"33","TAG086","W3 Parent - Current V2","2","5",NA,"0",NA,NA,NA,NA,NA,3
+"34","TAG089","W3 Parent - Current V1","7","5",NA,"0",NA,"6",NA,"0",NA,3
+"35","TAG090","W3 Parent - Current V2","4","8",NA,"0",NA,"9",NA,"0",NA,3
+"36","TAG094","W3 Parent - Current V1","2","3",NA,"0",NA,"7","6months","1",NA,3

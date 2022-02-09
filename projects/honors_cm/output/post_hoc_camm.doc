@@ -1,0 +1,21 @@
+
+<table style="text-align:center"><tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="3"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="3" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="3">Self-perceived Scholastic Competence</td></tr>
+<tr><td style="text-align:left"></td><td>Without Mindfulness</td><td>Prior Mindfulness</td><td>Contemporaneous</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td></tr>
+<tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Prior Levels of Mindfulness</td><td></td><td>0.070<sup>**</sup></td><td></td></tr>
+<tr><td style="text-align:left"></td><td></td><td>(0.033)</td><td></td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">Contemporaneous Levels of Mindfulness</td><td></td><td></td><td>0.118<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td>(0.034)</td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td style="text-align:left">Constant</td><td>14.826<sup>***</sup></td><td>12.976<sup>***</sup></td><td>11.965<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.322)</td><td>(0.922)</td><td>(0.896)</td></tr>
+<tr><td style="text-align:left"></td><td></td><td></td><td></td></tr>
+<tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>158</td><td>158</td><td>154</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-414.348</td><td>-412.066</td><td>-400.394</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>834.696</td><td>832.131</td><td>808.788</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>843.884</td><td>844.381</td><td>820.936</td></tr>
+<tr><td colspan="4" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="3" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>

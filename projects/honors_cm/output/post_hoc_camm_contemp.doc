@@ -1,0 +1,14 @@
+
+<table style="text-align:center"><tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="2">Self-perceived Scholastic Competence</td></tr>
+<tr><td style="text-align:left"></td><td>Without predictors</td><td>Only Contemporaneous</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Contemporaneous Levels of Mindfulness</td><td></td><td>0.118<sup>***</sup> (0.034)</td></tr>
+<tr><td style="text-align:left">Constant</td><td>14.853<sup>***</sup> (0.332)</td><td>11.965<sup>***</sup> (0.896)</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>154</td><td>154</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-405.354</td><td>-400.394</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>816.709</td><td>808.788</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>825.820</td><td>820.936</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="2" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>

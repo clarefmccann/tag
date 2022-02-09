@@ -1,0 +1,19 @@
+
+<table style="text-align:center"><caption><strong>Self-perceived scholastic competence predicted by prior levels of trait mindfulness</strong></caption>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td colspan="2">Self-perceived Scholastic Competence</td></tr>
+<tr><td style="text-align:left"></td><td>Without Mindfulness</td><td>With Mindfulness</td></tr>
+<tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Low SES</td><td>-0.587 (1.009)</td><td>-0.187 (0.730)</td></tr>
+<tr><td style="text-align:left">Middle SES</td><td>-2.093<sup>*</sup> (1.070)</td><td>-0.708 (0.780)</td></tr>
+<tr><td style="text-align:left">Age at Menarche</td><td>0.526 (0.409)</td><td>-0.107 (0.305)</td></tr>
+<tr><td style="text-align:left">Prior levels of SPPA-SC</td><td></td><td>0.515<sup>***</sup> (0.090)</td></tr>
+<tr><td style="text-align:left">Prior Levels of Trait Mindfulness</td><td></td><td>0.112<sup>***</sup> (0.039)</td></tr>
+<tr><td style="text-align:left">Constant</td><td>8.898<sup>*</sup> (5.040)</td><td>5.846 (3.697)</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>100</td><td>100</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>-260.414</td><td>-246.746</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>532.827</td><td>509.493</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>548.458</td><td>530.334</td></tr>
+<tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="2" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>
