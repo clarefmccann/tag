@@ -1,0 +1,559 @@
+---
+title: "for_tag_timeline"
+author: "cfm"
+date: "`r Sys.Date()`"
+output:
+	html_document:
+		toc: yes
+		toc_float:
+			collapsed: yes
+			smooth_scroll: yes
+		number_sections: yes
+		theme: superhero
+		highlight: default
+		fig_width: 7
+		fig_height: 6
+		fig_caption: yes
+		df_print: paged
+		code_folding: hide
+---
+
+## Setting up markdown {.tabset}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+```
+### loading required packages
+
+```{r Load Required Packages, message=FALSE, warning=FALSE, include=FALSE}
+# load packages
+library(pacman)
+pacman::p_load(dplyr, ggplot2, tidyr, lubridate, data.table, install = TRUE)
+```
+
+### setting root path
+
+```{r Setting root path}
+## cfm root path
+# root_path = "~/Desktop/Repos/tag/"
+root_path = "~/Desktop/projects/tag/for_tag_timeline/working_docs/"
+```
+
+### pulling in data
+
+```{r pulling in csv}
+## importing doc pulled from redcap with IDs and all session dates
+w1_dates <- read.csv(paste0(root_path, "w1_dates.csv"),
+                     stringsAsFactors = FALSE)
+w2_dates <- read.csv(paste0(root_path, "w2_dates.csv"),
+                stringsAsFactors = FALSE)
+w3_dates <- read.csv(paste0(root_path, "w3_dates.csv"),
+                stringsAsFactors = FALSE) 
+w4_dates <- read.csv(paste0(root_path, "w4_dates.csv"),
+                stringsAsFactors = FALSE) 
+dob <- read.csv(paste0(root_path, "dob.csv"),
+                stringsAsFactors = FALSE) %>%
+  select(subject_spit_id, dob)
+wd <- read.csv(paste0(root_path, "withdrawals.csv"),
+                stringsAsFactors = FALSE) 
+skipped <- read.csv(paste0(root_path, "skipped.csv"),
+                    stringsAsFactors = FALSE)
+```
+
+## loading in age func
+
+```{r age fun}
+
+age_calc <- function(dob, enddate=Sys.Date(), units='months', precise=TRUE){
+  if (!inherits(dob, "Date") | !inherits(enddate, "Date")) {
+    stop("Both dob and enddate must be Date class objects")
+  }
+  if (any(enddate < dob)) {
+    stop("End date must be a date after date of birth")
+  }
+  start <- as.POSIXlt(dob)
+  end <- as.POSIXlt(enddate)
+  if (precise) {
+    start_is_leap <- ifelse(start$year %% 400 == 0, TRUE,
+                            ifelse(start$year %% 100 == 0, FALSE,
+                                   ifelse(start$year %% 4 == 0, TRUE, FALSE)))
+    end_is_leap <- ifelse(end$year %% 400 == 0, TRUE,
+                          ifelse(end$year %% 100 == 0, FALSE,
+                                 ifelse(end$year %% 4 == 0, TRUE, FALSE)))
+  }
+  if (units == 'days') {
+    result <- difftime(end, start, units = 'days')
+  } else if (units == 'months') {
+    months <- vapply(mapply(seq, as.POSIXct(start), as.POSIXct(end),
+                            by = 'months', SIMPLIFY = FALSE),
+                     length, FUN.VALUE = length(start)) - 1
+    # length(seq(start, end, by='month')) - 1
+    if (precise) {
+      month_length_end <- ifelse(end$mon == 1 & end_is_leap, 29,
+                                 ifelse(end$mon == 1, 28,
+                                        ifelse(end$mon %in% c(3, 5, 8, 10),
+                                               30, 31)))
+      month_length_prior <- ifelse((end$mon - 1) == 1 & start_is_leap, 29,
+                                   ifelse((end$mon - 1) == 1, 28,
+                                        ifelse((end$mon - 1) %in% c(3, 5, 8, 10),
+                                                 30, 31)))
+      month_frac <- ifelse(end$mday > start$mday,
+                           (end$mday - start$mday) / month_length_end,
+                           ifelse(end$mday < start$mday,
+                                  (month_length_prior - start$mday) /
+                                    month_length_prior +
+                                    end$mday/month_length_end, 0.0))
+      result <- months + month_frac
+    }else{
+      result <- months
+    }
+  } else if (units == 'years') {
+    years <- vapply(mapply(seq, as.POSIXct(start), as.POSIXct(end),
+                           by = 'years', SIMPLIFY = FALSE),
+                    length, FUN.VALUE = length(start)) - 1
+    if (precise) {
+      start_length <- ifelse(start_is_leap, 366, 365)
+      end_length <- ifelse(end_is_leap, 366, 365)
+      start_day <- ifelse(start_is_leap & start$yday >= 60,
+                          start$yday - 1,
+                          start$yday)
+      end_day <- ifelse(end_is_leap & end$yday >= 60,
+                        end$yday - 1,
+                        end$yday)
+      year_frac <- ifelse(start_day < end_day,
+                          (end_day - start_day)/end_length,
+                          ifelse(start_day > end_day,
+                                 (start_length - start_day) / start_length +
+                                   end_day / end_length, 0.0))
+      result <- years + year_frac
+    }else{
+      result <- years
+    }
+  }else{
+    stop("Unrecognized units. Please choose years, months, or days.")
+  }
+  return(result)
+}
+
+```
+
+## creating one df 
+```{r one doc}
+## wave wide docs 
+
+w1_dates <- left_join(dob, w1_dates, by = "subject_spit_id")
+w2_dates <- left_join(w2_dates, dob, by = "subject_spit_id")
+w3_dates <- left_join(w3_dates, dob, by = "subject_spit_id")
+w4_dates <- left_join(w4_dates, dob, by = "subject_spit_id")
+
+# making whole wide doc for wave lapses 
+
+lapse_actual <- full_join(w1_dates, w2_dates, by = "subject_spit_id")
+lapse_actual <- full_join(lapse_actual, full_join(w3_dates, w4_dates, by = "subject_spit_id"), by = "subject_spit_id")
+
+lapse_actual$w1_w2_lapse <- interval(lapse_actual$sa_date.x.x, lapse_actual$sa_date.y.x) %/% months(1)
+lapse_actual$w2_w3_lapse <- interval(lapse_actual$sa_date.y.x, lapse_actual$sa_date.x.y) %/% months(1)
+lapse_actual$w3_w4_lapse <- interval(lapse_actual$sa_date.x.y, lapse_actual$sa_date.y.y) %/% months(1)
+
+lapse_actual <- lapse_actual[,-c(2:18)]
+
+## making session specific docs
+
+w1s1 <- w1_dates[c(1,2,4)]
+w1s2 <- w1_dates[c(1,2,5)]
+w2s1 <- w2_dates[c(1,3,5)]
+w2s2 <- w2_dates[c(1,4,5)]
+w3s1 <- w3_dates[c(1,3,5)]
+w3s2 <- w3_dates[c(1,4,5)]
+w4s1 <- w4_dates[c(1,3,5)]
+w4s2 <- w4_dates[c(1,4,5)]
+
+w1s1$sa_date <- as.Date(w1s1$sa_date)
+w1s1$dob <- as.Date(w1s1$dob)
+w1s1 <- w1s1 %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w1s1$age_w1s1 <- age_calc(w1s1$dob, enddate = w1s1$sa_date, units = "years", precise = TRUE)
+
+w1s2$sb_date <- as.Date(w1s2$sb_date)
+w1s2$dob <- as.Date(w1s2$dob)
+w1s2 <- w1s2 %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w1s2$age_w1s2 <- age_calc(w1s2$dob, enddate = w1s2$sb_date, units = "years", precise = TRUE)
+
+w2s1$sa_date <- as.Date(w2s1$sa_date)
+w2s1$dob <- as.Date(w2s1$dob)
+w2s1 <- w2s1 %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w2s1$age_w2s1 <- age_calc(w2s1$dob, enddate = w2s1$sa_date, units = "years", precise = TRUE)
+
+w2s2$sb_date <- as.Date(w2s2$sb_date)
+w2s2$dob <- as.Date(w2s2$dob)
+w2s2 <- w2s2 %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w2s2$age_w2s2 <- age_calc(w2s2$dob, enddate = w2s2$sb_date, units = "years", precise = TRUE)
+
+w3s1$sa_date <- as.Date(w3s1$sa_date)
+w3s1$dob <- as.Date(w3s1$dob)
+w3s1 <- w3s1 %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w3s1$age_w3s1 <- age_calc(w3s1$dob, enddate = w3s1$sa_date, units = "years", precise = TRUE)
+
+w3s2$sb_date <- as.Date(w3s2$sb_date)
+w3s2$dob <- as.Date(w3s2$dob)
+w3s2 <- w3s2 %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w3s2$age_w3s2 <- age_calc(w3s2$dob, enddate = w3s2$sb_date, units = "years", precise = TRUE)
+
+w4s1$sa_date <- as.Date(w4s1$sa_date)
+w4s1$dob <- as.Date(w4s1$dob)
+w4s1 <- w4s1 %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w4s1$age_w4s1 <- age_calc(w4s1$dob, enddate = w4s1$sa_date, units = "years", precise = TRUE)
+
+w4s2$sb_date <- as.Date(w4s2$sb_date)
+w4s2$dob <- as.Date(w4s2$dob)
+w4s2 <- w4s2 %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w4s2$age_w4s2 <- age_calc(w4s2$dob, enddate = w4s2$sb_date, units = "years", precise = TRUE)
+
+w5s1 <- w4s1[, c(1, 3)]
+w5s1$lapse_predicted <- runif(77, 14, 18) 
+w5s2 <- w5s1[, c(1,2,3)]
+w5s2$lapse_predicted <- w5s2$lapse_predicted + 1
+w5s1$lapse_predicted <- as.integer(w5s1$lapse_predicted)
+w5s2$lapse_predicted <- as.integer(w5s2$lapse_predicted)
+
+w5s1$sa_date <- w4s1$sa_date %m+% months(w5s1$lapse_predicted)
+w5s2$sb_date <- w4s1$sa_date %m+% months(w5s2$lapse_predicted)
+
+w5s1$sa_date <- as.Date(w5s1$sa_date)
+w5s1$dob <- as.Date(w5s1$dob)
+w5s1 <- w5s1 %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w5s1$age_w5s1 <- age_calc(w5s1$dob, enddate = w5s1$sa_date, units = "years", precise = TRUE)
+
+w5s2$sb_date <- as.Date(w5s2$sb_date)
+w5s2$dob <- as.Date(w5s2$dob)
+w5s2 <- w5s2 %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w5s2$age_w5s2 <- age_calc(w5s2$dob, enddate = w5s2$sb_date, units = "years", precise = TRUE)
+
+w5s1 <- w5s1[,-c(3)]
+w5s2 <- w5s2[,-c(3)]
+
+w6s1 <- w5s1[, c(1, 2)]
+w6s2 <- w5s2[, c(1, 2)]
+w6s1$lapse_predicted <- runif(77, 14, 18) 
+w6s2$lapse_predicted <- w6s1$lapse_predicted
+w6s1$lapse_predicted <- as.integer(w6s1$lapse_predicted)
+w6s2$lapse_predicted <- as.integer(w6s2$lapse_predicted)
+
+w6s1$sa_date <- w5s1$sa_date %m+% months(w6s1$lapse_predicted)
+w6s2$sb_date <- w5s2$sb_date %m+% months(w6s2$lapse_predicted)
+
+w6s1$sa_date <- as.Date(w6s1$sa_date)
+w6s1$dob <- as.Date(w6s1$dob)
+w6s1 <- w6s1 %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w6s1$age_w6s1 <- age_calc(w6s1$dob, enddate = w6s1$sa_date, units = "years", precise = TRUE)
+
+w6s2$sb_date <- as.Date(w6s2$sb_date)
+w6s2$dob <- as.Date(w6s2$dob)
+w6s2 <- w6s2 %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w6s2$age_w6s2 <- age_calc(w6s2$dob, enddate = w6s2$sb_date, units = "years", precise = TRUE)
+
+w6s1 <- w6s1[,-c(3)]
+w6s2 <- w6s2[,-c(3)]
+
+```
+
+```{r prediction}
+
+## filtering for folks who completed W3 and have not withdrawn 
+
+w4_needed <- w3_dates[!w3_dates$subject_spit_id %in% wd$subject_spit_id,]
+
+w4_needed <- w4_needed[-c(1),]
+
+w4_needed <- subset(w4_needed, !(subject_spit_id %in% w4s1$subject_spit_id))
+
+w4_needed[w4_needed==""] <- NA
+w4_needed <- na.omit(w4_needed)
+
+w4_needed$sa_date <- as.Date(w4_needed$sa_date)
+w4_needed$sb_date <- as.Date(w4_needed$sb_date)
+w4_needed$dob <- as.Date(w4_needed$dob)
+
+## creating w4s1 and w4s2 prediction docs 
+
+w4s1_predicted <- w4_needed[c(1,5)]
+w4s2_predicted <- w4_needed[c(1,5)]
+w4s1_predicted$lapse_predicted <- runif(61, 18, 28) 
+w4s2_predicted$lapse_predicted <- w4s1_predicted$lapse_predicted
+w4s1_predicted$lapse_predicted <- as.integer(w4s1_predicted$lapse_predicted)
+w4s2_predicted$lapse_predicted <- as.integer(w4s2_predicted$lapse_predicted)
+
+w4s1_predicted$sa_date <- w4_needed$sa_date %m+% months(w4s1_predicted$lapse_predicted)
+w4s2_predicted$sb_date <- w4_needed$sb_date %m+% months(w4s2_predicted$lapse_predicted)
+
+## if their predicted W4 time has passed, moving them aside 
+
+passed_time_px_s1 <- w4s1_predicted[which(w4s1_predicted$sa_date <= "2021-12-31"),]
+passed_time_px_s2 <- w4s2_predicted[w4s2_predicted$subject_spit_id %in% passed_time_px_s1$subject_spit_id,]
+
+## calculating age 
+
+w4s1_predicted <- w4s1_predicted %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w4s1_predicted$age_w4s1_predicted <- age_calc(w4s1_predicted$dob, enddate = w4s1_predicted$sa_date, units = "years", precise = TRUE)
+
+w4s2_predicted <- w4s2_predicted %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w4s2_predicted$age_w4s2_predicted <- age_calc(w4s2_predicted$dob, enddate = w4s2_predicted$sb_date, units = "years", precise = TRUE)
+
+## FOR THOSE WHO SKIPPED W4 
+
+#w4_skipped <- full_join(w4_skipped, w3_dates, by = "subject_spit_id")
+
+w5s1_predicted <- w4s1_predicted[c(1,2)]
+w5s2_predicted <- w4s2_predicted[c(1,2)]
+w5s1_predicted$lapse_predicted <- runif(61, 14, 18) 
+w5s2_predicted$lapse_predicted <- w5s1_predicted$lapse_predicted
+w5s1_predicted$lapse_predicted <- as.integer(w5s1_predicted$lapse_predicted)
+w5s2_predicted$lapse_predicted <- as.integer(w5s2_predicted$lapse_predicted)
+
+w5s1_predicted$sa_date <- w4s1_predicted$sa_date %m+% months(w5s1_predicted$lapse_predicted)
+w5s2_predicted$sb_date <- w4s2_predicted$sb_date %m+% months(w5s2_predicted$lapse_predicted)
+
+w5s1_predicted$sa_date <- as.Date(w5s1_predicted$sa_date)
+w5s1_predicted$dob <- as.Date(w5s1_predicted$dob)
+w5s1_predicted <- w5s1_predicted %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w5s1_predicted$age_w5s1_predicted <- age_calc(w5s1_predicted$dob, enddate = w5s1_predicted$sa_date, units = "years", precise = TRUE)
+
+w5s2_predicted$sb_date <- as.Date(w5s2_predicted$sb_date)
+w5s2_predicted$dob <- as.Date(w5s2_predicted$dob)
+w5s2_predicted <- w5s2_predicted %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w5s2_predicted$age_w5s2_predicted <- age_calc(w5s2_predicted$dob, enddate = w5s2_predicted$sb_date, units = "years", precise = TRUE)
+
+w6s1_predicted <- w5s1_predicted[, c(1, 2)]
+w6s2_predicted <- w5s2_predicted[, c(1, 2)]
+w6s1_predicted$w6s1_lapse_predicted <- runif(61, 14, 18)
+w6s2_predicted$w6s2_lapse_predicted <- w6s1_predicted$w6s1_lapse_predicted
+w6s1_predicted$w6s1_lapse_predicted <- as.integer(w6s1_predicted$w6s1_lapse_predicted)
+w6s2_predicted$w6s2_lapse_predicted <- as.integer(w6s2_predicted$w6s2_lapse_predicted)
+w6s1_predicted$sa_date <- w5s1_predicted$sa_date %m+% months(w6s1_predicted$w6s1_lapse_predicted)
+w6s2_predicted$sb_date <- w5s2_predicted$sb_date %m+% months(w6s2_predicted$w6s2_lapse_predicted)
+
+w6s1_predicted$sa_date <- as.Date(w6s1_predicted$sa_date)
+w6s1_predicted$dob <- as.Date(w6s1_predicted$dob)
+w6s1_predicted <- w6s1_predicted %>%
+  filter(!is.na(dob),
+         !is.na(sa_date))
+
+w6s1_predicted$age_w6s1_predicted <- age_calc(w6s1_predicted$dob, enddate = w6s1_predicted$sa_date, units = "years", precise = TRUE)
+
+w6s2_predicted$sb_date <- as.Date(w6s2_predicted$sb_date)
+w6s2_predicted$dob <- as.Date(w6s2_predicted$dob)
+w6s2_predicted <- w6s2_predicted %>%
+  filter(!is.na(dob),
+         !is.na(sb_date))
+
+w6s2_predicted$age_w6s2_predicted <- age_calc(w6s2_predicted$dob, enddate = w6s2_predicted$sb_date, units = "years", precise = TRUE)
+
+```
+
+## creating clean docs for output 
+
+```{r cleaning for output}
+
+whole_actual <- full_join(w1s1, w1s2, by = "subject_spit_id")
+whole_actual <- full_join(whole_actual, full_join(w2s1, w2s2), by = "subject_spit_id")
+whole_actual <- full_join(whole_actual, full_join(w3s1, w3s2), by = "subject_spit_id")
+whole_actual <- full_join(whole_actual, full_join(w4s1, w4s2), by = "subject_spit_id")
+whole_actual <- full_join(whole_actual, full_join(w5s1, w5s2), by = "subject_spit_id")
+whole_actual <- full_join(whole_actual, full_join(w6s1, w6s2), by = "subject_spit_id")
+
+whole_actual <- whole_actual[,-c(5,9,14,19,28,23)]
+colnames(whole_actual) <- c("tagid", "dob", "w1s1_date", "w1s1_age", "w1s2_date", "w1s2_age", "w2s1_date", "w2s1_age", "w2s2_date", "w2s2_age", "w3s1_date", "w3s1_age", "w3s2_date", "w3s2_age", "w4s1_date", "w4s1_age", "w4s2_date", "w4s2_age", "w5s1_projected_date", "w5s1_projected_age", "w5s2_projected_date", "w5s2_projected_age", "w6s1_projected_date", "w6s1_projected_age", "w6s2_projected_date", "w6s2_projected_age")
+
+## PREDICTED DOC 
+
+whole_predicted <- full_join(w1s1, w1s2, by = "subject_spit_id")
+whole_predicted <- full_join(whole_predicted, full_join(w2s1, w2s2), by = "subject_spit_id")
+whole_predicted <- full_join(whole_predicted, full_join(w3s1, w3s2), by = "subject_spit_id")
+whole_predicted <- full_join(whole_predicted, full_join(w4s1_predicted, w4s2_predicted), by = "subject_spit_id")
+whole_predicted <- full_join(whole_predicted, full_join(w5s1_predicted, w5s2_predicted), by = "subject_spit_id")
+whole_predicted <- full_join(whole_predicted, full_join(w6s1_predicted, w6s2_predicted), by = "subject_spit_id")
+
+whole_predicted <- whole_predicted %>%
+  filter(!is.na(dob.x.x.x))
+
+whole_predicted <- whole_predicted[,-c(5,9,14,18,19,24,25,30,31,34)]
+colnames(whole_predicted) <- c("tagid", "dob", "w1s1_date", "w1s1_age", "w1s2_date", "w1s2_age", "w2s1_date", "w2s1_age", "w2s2_date", "w2s2_age", "w3s1_date", "w3s1_age", "w3s2_date", "w3s2_age", "w4s1_date", "w4s1_age", "w4s2_date", "w4s2_age", "w5s1_projected_date", "w5s1_projected_age", "w5s2_projected_date", "w5s2_projected_age", "w6s1_projected_date", "w6s1_projected_age", "w6s2_projected_date", "w6s2_projected_age")
+
+### creating NA for W4 values for folks who are skipping or have passed time lapse for W4 
+
+colnames(passed_time_px_s1)[1] <- "tagid"
+passed_time_px_w4 <- subset(whole_predicted, (tagid %in% passed_time_px_s1$tagid))
+passed_time_px_w4$w4s1_date <- NA
+passed_time_px_w4$w4s2_date <- NA
+passed_time_px_w4$w4s1_age <- NA
+passed_time_px_w4$w4s2_age <- NA
+whole_predicted <- subset(whole_predicted, !(tagid %in% passed_time_px_s1$tagid))
+whole_predicted <- full_join(whole_predicted, passed_time_px_w4)
+
+write.csv(whole_actual, file = paste0(root_path, "output/whole_actual.csv"))
+write.csv(whole_predicted, file = paste0(root_path, "output/whole_predicted.csv"))
+```
+
+```{r}
+
+###
+
+age_whole_actual <- whole_actual[grep("_age|tagid", names(whole_actual))] 
+dates_whole_actual <- whole_actual[grep("_date|tagid", names(whole_actual))] 
+
+age_actual_long <- gather(age_whole_actual, key = "timepoint", value = "age", w1s1_age:w6s2_projected_age)
+dates_actual_long <- gather(dates_whole_actual, key = "timepoint", value = "session_date", w1s1_date:w6s2_projected_date)
+
+age_actual_long <- na.omit(age_actual_long)
+dates_actual_long <- na.omit(dates_actual_long)
+
+age_whole_predicted <- whole_predicted[grep("_age|tagid", names(whole_predicted))] 
+dates_whole_predicted  <- whole_predicted [grep("_date|tagid", names(whole_predicted))] 
+
+age_predicted_long <- gather(age_whole_predicted , key = "timepoint", value = "age", w1s1_age:w6s2_projected_age)
+dates_predicted_long <- gather(dates_whole_predicted , key = "timepoint", value = "session_date", w1s1_date:w6s2_projected_date)
+
+age_predicted_long <- na.omit(age_predicted_long)
+dates_predicted_long <- na.omit(dates_predicted_long)
+
+age_whole <- full_join(age_actual_long, age_predicted_long)
+dates_whole <- full_join(dates_actual_long, dates_predicted_long)
+
+## creating a doc ordering IDs by timepoints, age and ID
+
+projected_study_design_age <- age_whole[order(age_whole$timepoint, age_whole$age, age_whole$tagid),]
+
+## creating levels using ordered doc
+
+age_whole <- projected_study_design_age %>%
+  mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
+
+## creating visualization
+
+projected_study_design_age<- ggplot(age_whole,
+                           aes(x=age,
+                               y=Rank_nr,
+                               group=tagid,
+                               col=timepoint,
+                               shape=timepoint)) +
+  geom_point(alpha=1) +
+  geom_line(alpha=.4) +
+  expand_limits(y=c(0,190))+
+  theme(axis.text.y = element_blank()) +
+  scale_color_manual(name= "Wave",
+                     labels = c("W1S1", "W1S2", "W2S1", "W2S2", "W3S1", "W3S2", "W4S1", "W4S2", "W5S1", "W5S2", "W6S1", "W6S2"),
+                     values = c("#5445b1", "#5c1a33", "#f3c483", "#D7263D", "#F46036", "#2E294E", "#1B998B", "#C5D86D", "#FF9B85", "#8884FF", "#E8CEE4", "#88BB92"))  +
+  scale_shape_manual(name= "Wave",
+              labels= c("W1S1", "W1S2", "W2S1", "W2S2", "W3S1", "W3S2", "W4S1", "W4S2", "W5S1", "W5S2", "W6S1", "W6S2"),
+              values = c(0, 1, 2, 5, 6, 7, 8, 9, 10, 16, 17, 18))+
+  ylab("") +
+  xlab("Age (years)")+
+  scale_y_discrete(breaks=NULL) +
+  theme_minimal()
+
+## viewing plot
+
+print(projected_study_design_age)
+
+## saving png of plot
+
+ggsave(filename=paste0(root_path,"output/age_projection_plot.png"),
+      plot=projected_study_design_age, width=5, height=5, units='in', dpi=600, bg = "transparent")
+
+### by dates 
+
+## creating a doc ordering IDs by timepoints, age and ID
+
+projected_study_design_dates <- dates_whole[order(dates_whole$timepoint, dates_whole$session_date, dates_whole$tagid),]
+
+## creating levels using ordered doc
+
+dates_whole <- projected_study_design_dates %>%
+  mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
+
+## creating visualization
+
+projected_study_design_dates<- ggplot(dates_whole,
+                           aes(x=session_date,
+                               y=Rank_nr,
+                               group=tagid,
+                               col=timepoint,
+                               shape=timepoint)) +
+  geom_point(alpha=1) +
+  geom_line(alpha=.4) +
+  expand_limits(y=c(0,190))+
+  theme(axis.text.y = element_blank()) +
+  scale_color_manual(name= "Wave",
+                     labels = c("W1S1", "W1S2", "W2S1", "W2S2", "W3S1", "W3S2", "W4S1", "W4S2", "W5S1", "W5S2", "W6S1", "W6S2"),
+                     values = c("#5445b1", "#5c1a33", "#f3c483", "#D7263D", "#F46036", "#2E294E", "#1B998B", "#C5D86D", "#FF9B85", "#8884FF", "#E8CEE4", "#88BB92"))  +
+  scale_shape_manual(name= "Wave",
+              labels= c("W1S1", "W1S2", "W2S1", "W2S2", "W3S1", "W3S2", "W4S1", "W4S2", "W5S1", "W5S2", "W6S1", "W6S2"),
+              values = c(0, 1, 2, 5, 6, 7, 8, 9, 10, 16, 17, 18))+
+  ylab("") +
+  xlab("Dates")+
+  scale_y_discrete(breaks=NULL) +
+  theme_minimal()
+
+## viewing plot
+
+print(projected_study_design_dates)
+
+## saving png of plot
+
+ggsave(filename=paste0(root_path,"output/dates_projection_plot.png"),
+      plot=projected_study_design_dates, width=5, height=5, units='in', dpi=600, bg = "transparent")
+
+
+```
+
