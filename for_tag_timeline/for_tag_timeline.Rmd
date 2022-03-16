@@ -39,8 +39,8 @@ pacman::p_load(dplyr, ggplot2, tidyr, lubridate, data.table, install = TRUE)
 
 ```{r Setting root path}
 ## cfm root path
-# root_path = "~/Desktop/Repos/tag/"
-root_path = "~/Desktop/projects/tag/for_tag_timeline/working_docs/"
+root_path = "~/Desktop/Projects/tag/for_tag_timeline/working_docs/"
+#root_path = "~/Desktop/projects/tag/for_tag_timeline/working_docs/"
 ```
 
 ### pulling in data
@@ -206,32 +206,32 @@ w2s2 <- w2s2 %>%
 
 w2s2$age_w2s2 <- age_calc(w2s2$dob, enddate = w2s2$sb_date, units = "years", precise = TRUE)
 
-w3s1$sa_date <- as.Date(w3s1$sa_date)
-w3s1$dob <- as.Date(w3s1$dob)
+w3s1$sa_date <- as.Date(w3s1$sa_date, format = "%Y-%m-%d")
+w3s1$dob <- as.Date(w3s1$dob, format = "%Y-%m-%d")
 w3s1 <- w3s1 %>%
   filter(!is.na(dob),
          !is.na(sa_date))
 
 w3s1$age_w3s1 <- age_calc(w3s1$dob, enddate = w3s1$sa_date, units = "years", precise = TRUE)
 
-w3s2$sb_date <- as.Date(w3s2$sb_date)
-w3s2$dob <- as.Date(w3s2$dob)
+w3s2$sb_date <- as.Date(w3s2$sb_date,format = "%Y-%m-%d")
+w3s2$dob <- as.Date(w3s2$dob, format = "%Y-%m-%d")
 w3s2 <- w3s2 %>%
   filter(!is.na(dob),
          !is.na(sb_date))
 
 w3s2$age_w3s2 <- age_calc(w3s2$dob, enddate = w3s2$sb_date, units = "years", precise = TRUE)
 
-w4s1$sa_date <- as.Date(w4s1$sa_date)
-w4s1$dob <- as.Date(w4s1$dob)
+w4s1$sa_date <- as.Date(w4s1$sa_date, format = "%Y-%m-%d")
+w4s1$dob <- as.Date(w4s1$dob, format = "%Y-%m-%d")
 w4s1 <- w4s1 %>%
   filter(!is.na(dob),
          !is.na(sa_date))
 
 w4s1$age_w4s1 <- age_calc(w4s1$dob, enddate = w4s1$sa_date, units = "years", precise = TRUE)
 
-w4s2$sb_date <- as.Date(w4s2$sb_date)
-w4s2$dob <- as.Date(w4s2$dob)
+w4s2$sb_date <- as.Date(w4s2$sb_date, format = "%Y-%m-%d")
+w4s2$dob <- as.Date(w4s2$dob, format = "%Y-%m-%d")
 w4s2 <- w4s2 %>%
   filter(!is.na(dob),
          !is.na(sb_date))
@@ -248,16 +248,16 @@ w5s2$lapse_predicted <- as.integer(w5s2$lapse_predicted)
 w5s1$sa_date <- w4s1$sa_date %m+% months(w5s1$lapse_predicted)
 w5s2$sb_date <- w4s1$sa_date %m+% months(w5s2$lapse_predicted)
 
-w5s1$sa_date <- as.Date(w5s1$sa_date)
-w5s1$dob <- as.Date(w5s1$dob)
+w5s1$sa_date <- as.Date(w5s1$sa_date, format = "%Y-%m-%d")
+w5s1$dob <- as.Date(w5s1$dob, format = "%Y-%m-%d")
 w5s1 <- w5s1 %>%
   filter(!is.na(dob),
          !is.na(sa_date))
 
 w5s1$age_w5s1 <- age_calc(w5s1$dob, enddate = w5s1$sa_date, units = "years", precise = TRUE)
 
-w5s2$sb_date <- as.Date(w5s2$sb_date)
-w5s2$dob <- as.Date(w5s2$dob)
+w5s2$sb_date <- as.Date(w5s2$sb_date, format = "%Y-%m-%d")
+w5s2$dob <- as.Date(w5s2$dob, format = "%Y-%m-%d")
 w5s2 <- w5s2 %>%
   filter(!is.na(dob),
          !is.na(sb_date))
@@ -269,7 +269,7 @@ w5s2 <- w5s2[,-c(3)]
 
 w6s1 <- w5s1[, c(1, 2)]
 w6s2 <- w5s2[, c(1, 2)]
-w6s1$lapse_predicted <- runif(77, 14, 18) 
+w6s1$lapse_predicted <- runif(77, 7, 9) 
 w6s2$lapse_predicted <- w6s1$lapse_predicted
 w6s1$lapse_predicted <- as.integer(w6s1$lapse_predicted)
 w6s2$lapse_predicted <- as.integer(w6s2$lapse_predicted)
@@ -277,16 +277,16 @@ w6s2$lapse_predicted <- as.integer(w6s2$lapse_predicted)
 w6s1$sa_date <- w5s1$sa_date %m+% months(w6s1$lapse_predicted)
 w6s2$sb_date <- w5s2$sb_date %m+% months(w6s2$lapse_predicted)
 
-w6s1$sa_date <- as.Date(w6s1$sa_date)
-w6s1$dob <- as.Date(w6s1$dob)
+w6s1$sa_date <- as.Date(w6s1$sa_date, format = "%Y-%m-%d")
+w6s1$dob <- as.Date(w6s1$dob, format = "%Y-%m-%d")
 w6s1 <- w6s1 %>%
   filter(!is.na(dob),
          !is.na(sa_date))
 
 w6s1$age_w6s1 <- age_calc(w6s1$dob, enddate = w6s1$sa_date, units = "years", precise = TRUE)
 
-w6s2$sb_date <- as.Date(w6s2$sb_date)
-w6s2$dob <- as.Date(w6s2$dob)
+w6s2$sb_date <- as.Date(w6s2$sb_date, format = "%Y-%m-%d")
+w6s2$dob <- as.Date(w6s2$dob, format = "%Y-%m-%d")
 w6s2 <- w6s2 %>%
   filter(!is.na(dob),
          !is.na(sb_date))
@@ -295,6 +295,13 @@ w6s2$age_w6s2 <- age_calc(w6s2$dob, enddate = w6s2$sb_date, units = "years", pre
 
 w6s1 <- w6s1[,-c(3)]
 w6s2 <- w6s2[,-c(3)]
+
+```
+
+```{r looking at age for actual}
+
+over_19_w5 <- w5s1[which(w5s1$age_w5s1 >= 19.5),]
+over_20_w6 <- w6s1[which(w6s1$age_w6s1 >= 20),]
 
 ```
 
@@ -344,7 +351,7 @@ w5s2_predicted$w5s2_age <- age_calc(w5s2_predicted$dob, enddate = w5s2_predicted
 
 w6s1_predicted <- w5s1_predicted[, c(1, 2, 3)]
 w6s2_predicted <- w5s2_predicted[, c(1, 2, 3)]
-w6s1_predicted$w6s1_lapse_predicted <- runif(67, 14, 16)
+w6s1_predicted$w6s1_lapse_predicted <- runif(67, 7, 12)
 w6s2_predicted$w6s2_lapse_predicted <- w6s1_predicted$w6s1_lapse_predicted
 w6s1_predicted$w6s1_lapse_predicted <- as.integer(w6s1_predicted$w6s1_lapse_predicted)
 w6s2_predicted$w6s2_lapse_predicted <- as.integer(w6s2_predicted$w6s2_lapse_predicted)
@@ -369,6 +376,13 @@ w6s2_predicted$w6s2_age <- age_calc(w6s2_predicted$dob, enddate = w6s2_predicted
 
 w4s2_predicted <- w4_projected[, c(1,4,2,6)]
 w4s1_predicted <- w4_projected[, c(1,3,2,5)]
+
+```
+
+```{r looking at age for predicted}
+
+over_19_w5_predicted <- w5s1_predicted[which(w5s1_predicted$w5s1_age >= 19.5),]
+over_20_w6_predicted <- w6s1_predicted[which(w6s1_predicted$W6s1_age >= 20),]
 
 ```
 
@@ -414,6 +428,17 @@ whole_predicted <- full_join(whole_predicted, skipped_w4)
 
 write.csv(whole_actual, file = paste0(root_path, "output/whole_actual.csv"))
 write.csv(whole_predicted, file = paste0(root_path, "output/whole_predicted.csv"))
+
+
+## creating one whole doc 
+
+whole <- whole_actual[!whole_actual$tagid %in% whole_predicted$tagid,]
+whole <- rbind(whole, whole_predicted) %>% 
+  arrange(tagid) 
+whole <- whole[!duplicated(whole),]
+
+write.csv(whole, file = paste0(root_path, "output/whole.csv"))
+
 ```
 
 ```{r}
