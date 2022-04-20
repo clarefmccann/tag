@@ -1,0 +1,368 @@
+---
+title: "all_waves_demo"
+author: "cfm"
+date: "`r Sys.Date()`"
+output:
+	html_document:
+		toc: yes
+		toc_float:
+			collapsed: yes
+			smooth_scroll: yes
+		number_sections: yes
+		theme: superhero
+		highlight: default
+		fig_width: 7
+		fig_height: 6
+		fig_caption: yes
+		df_print: paged
+		code_folding: hide
+---
+
+## Setting up markdown {.tabset}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+```
+### loading required packages
+
+```{r Load Required Packages, message=FALSE, warning=FALSE, include=FALSE}
+# load packages
+library(pacman)
+pacman::p_load(dplyr, ggplot2, tidyr, lubridate, data.table, install = TRUE)
+```
+
+### setting root path
+
+```{r Setting root path}
+## cfm root path
+root_path = "/Volumes/psych-cog/dsnlab/TAG/behavior/Demographics/"
+#root_path = "~/Desktop/projects/tag/for_tag_timeline/working_docs/"
+```
+
+
+## loading in docs 
+
+```{r}
+## wide format 
+#age <- read.csv(paste0(root_path, "Age/TAG_age_wave_plus_predictions.csv")) %>% 
+  #select(tagid, w1s1_age, w2s1_age, w3s1_age)
+
+
+## long format 
+gender <- read.csv(paste0(root_path, "Gender_Identity/all_waves_gender_long.csv")) 
+
+## need to combine parent and kiddo report for W2 so loading this in                
+#parent_report_gender <- read.csv(paste0(root_path, "Gender_Identity/ARCHIVE/W1_W2_Parent_Report_Gender.csv"))
+
+# long format  
+race_ethnicity <- read.csv(paste0(root_path, "Race_Ethnicity/all_waves_race_ethnicity_long.csv"))
+
+## long format 
+ses <- read.csv(paste0(root_path, "ParentQ_SES/all_waves_ses_long.csv"))
+
+```
+
+## cleaning to create composite doc 
+```{r}
+
+## removing underscores from the IDs in the age doc 
+
+# age <-age %>%
+#   mutate(no_underscores=paste0("TAG",
+#                                substring(tagid,first=5,last=length(tagid))))
+# age <- age[,-1]
+# age <- age[c(4,1,2,3)]
+# colnames(age)[1] <- "tagid"
+# 
+# ## making age doc long 
+# age_long <- pivot_longer(age, names_to = "wave", values_to = "age", cols = 2:4)
+# 
+# ## renaming wave values in age_long
+# 
+# age_long <- age_long %>% 
+#   mutate(wave=ifelse(wave=="w1s1_age", 1,
+#                      ifelse(wave=="w2s1_age", 2,
+#                             ifelse(wave=="w3s1_age", 3,
+#                                    age_long))))
+# 
+# age_long$tagid <- as.factor(age_long$tagid)
+# age_long$age <- as.factor(age_long$age)
+# age_long$wave <- as.integer(age_long$wave)
+# 
+# write.csv(age_long, file = paste0(root_path, "Age/W1_W2_W3_age_long.csv"))
+```
+
+```{r gender doc }
+## creating a gender_w1_w2 doc 
+
+#w1_w2_gender <- gender[which(gender$wave == 1 | gender$wave == 2),] %>% 
+  #select(-gender_par_ksads)
+
+#w1_w2_gender_full <- full_join(w1_w2_gender, parent_report_gender, by = c("tagid", "wave"))
+
+## joining back with W3 data 
+
+#w3_gender <- gender %>% 
+  #filter(!gender$wave == 1,
+         #!gender$wave == 2)
+
+#gender_cleaned <- full_join(w1_w2_gender_full, w3_gender)
+
+#rm(parent_report_gender, w1_w2_gender, w1_w2_gender_full, w3_gender)
+
+## adding age 
+
+#gender_cleaned <- full_join(gender_cleaned, age_long, by = c("tagid", "wave"))
+
+## filling in blanks with NA 
+
+gender_cleaned <- gender %>% 
+  mutate_all(na_if, "") %>% 
+  filter(!tagid =="TAG001P",
+!tagid =="TAG025",
+!tagid =="TAG029",
+!tagid =="TAG039",
+!tagid =="TAG063",
+!tagid =="TAG097",
+!tagid =="TAG108",
+!tagid =="TAG115",
+!tagid =="TAG158",
+!tagid =="TAG172",
+!tagid =="TAG214",
+!tagid =="TAG219",
+!tagid =="TAG231",
+!tagid =="TAG249",
+!tagid =="TAG258")
+
+## exporting gender doc to gender CAS path 
+
+write.csv(gender_cleaned, file = paste0(root_path, "Gender_Identity/all_waves_gender_long.csv"))
+
+## creating wide format 
+
+gender_cleaned$gender_yrbs <- as.factor(gender_cleaned$gender_yrbs)
+gender_cleaned$gender_par_ksads <- as.factor(gender_cleaned$gender_par_ksads)
+gender_cleaned$age <- as.factor(gender_cleaned$age)
+
+
+gender_wide <- gender_cleaned %>% 
+  pivot_longer(-c("tagid", "wave")) %>% 
+  pivot_wider(names_from = "wave", values_from = "value")
+
+gender_wide <- pivot_wider(gender_wide, id_cols = "tagid", names_from = "name", values_from = 3:5) 
+         
+## exporting all waves gender wide to gender path on CAS 
+
+write.csv(gender_wide, file = paste0(root_path, "Gender_Identity/gender_all_waves_wide.csv"))
+
+```
+
+```{r ses}
+
+## adding age 
+
+#ses <- full_join(ses, age_long, by = c("tagid", "wave"))
+
+## filling in blanks with NA 
+
+ses_cleaned <- ses %>% 
+  mutate_all(na_if, "") %>% 
+  filter(!tagid =="TAG001P",
+!tagid =="TAG025",
+!tagid =="TAG029",
+!tagid =="TAG039",
+!tagid =="TAG063",
+!tagid =="TAG097",
+!tagid =="TAG108",
+!tagid =="TAG115",
+!tagid =="TAG158",
+!tagid =="TAG172",
+!tagid =="TAG214",
+!tagid =="TAG219",
+!tagid =="TAG231",
+!tagid =="TAG249",
+!tagid =="TAG258")
+
+## exporting gender doc to gender CAS path 
+
+write.csv(ses_cleaned, file = paste0(root_path, "ParentQ_SES/all_waves_ses_long.csv"))
+
+## creating wide format 
+
+## changing everything to factor just for transition from long to wide 
+
+ses_cleaned$P_Edu <- as.factor(ses_cleaned$P_Edu)
+ses_cleaned$P_Edu_change <- as.factor(ses_cleaned$P_Edu_change)
+ses_cleaned$Spouse_Edu <- as.factor(ses_cleaned$Spouse_Edu)
+ses_cleaned$Spouse_Edu_change <- as.factor(ses_cleaned$Spouse_Edu_change)
+ses_cleaned$Income <- as.factor(ses_cleaned$Income)
+ses_cleaned$free_lunch <- as.factor(ses_cleaned$free_lunch)
+ses_cleaned$age <- as.factor(ses_cleaned$age)
+
+ses_wide <- ses_cleaned %>% 
+  pivot_longer(-c("tagid", "wave")) %>% 
+  pivot_wider(names_from = "wave", values_from = "value")
+
+ses_wide <- pivot_wider(ses_wide, id_cols = "tagid", names_from = "name", values_from = 3:5)
+
+## exporting all waves gender wide to gender path on CAS 
+
+write.csv(ses_wide, file = paste0(root_path, "ParentQ_SES/ses_all_waves_wide.csv"))
+
+```
+
+```{r race_ethnicity}
+
+
+## adding age variable
+
+#race_ethnicity <- left_join(race_ethnicity, age_long, by = c("tagid", "wave"))
+
+## filling in blanks with NA 
+
+race_ethnicity_cleaned <- race_ethnicity %>% 
+  mutate_all(na_if, "") %>% 
+  filter(!tagid =="TAG001P",
+!tagid =="TAG025",
+!tagid =="TAG029",
+!tagid =="TAG039",
+!tagid =="TAG063",
+!tagid =="TAG097",
+!tagid =="TAG108",
+!tagid =="TAG115",
+!tagid =="TAG158",
+!tagid =="TAG172",
+!tagid =="TAG214",
+!tagid =="TAG219",
+!tagid =="TAG231",
+!tagid =="TAG249",
+!tagid =="TAG258")
+
+## exporting race_ethnicity doc to gender CAS path 
+
+write.csv(race_ethnicity_cleaned, file = paste0(root_path, "Race_Ethnicity/all_waves_race_ethnicity_long.csv"))
+
+## creating wide format 
+
+## changing everything to factor just for transition from long to wide 
+
+race_ethnicity_cleaned$Ethn <- as.factor(race_ethnicity_cleaned$Ethn)
+race_ethnicity_cleaned$AmericanIndian.AlaskanNative <- as.factor(race_ethnicity_cleaned$AmericanIndian.AlaskanNative)
+race_ethnicity_cleaned$Asian <- as.factor(race_ethnicity_cleaned$Asian)
+race_ethnicity_cleaned$NativeHawaiian.PacificIslander <- as.factor(race_ethnicity_cleaned$NativeHawaiian.PacificIslander)
+race_ethnicity_cleaned$Black.AfricanAmerican <- as.factor(race_ethnicity_cleaned$Black.AfricanAmerican)
+race_ethnicity_cleaned$White <- as.factor(race_ethnicity_cleaned$White)
+race_ethnicity_cleaned$Race_Other <- as.factor(race_ethnicity_cleaned$Race_Other)
+race_ethnicity_cleaned$age <- as.factor(race_ethnicity_cleaned$age)
+
+race_ethnicity_wide <- race_ethnicity_cleaned %>% 
+  pivot_longer(-c("tagid", "wave")) %>% 
+  pivot_wider(names_from = "wave", values_from = "value")
+
+race_ethnicity_wide <- race_ethnicity_wide[-c(5)]
+
+race_ethnicity_wide <- pivot_wider(race_ethnicity_wide, id_cols = "tagid", names_from = "name", values_from = 3:5)
+
+## exporting all waves race_ethnicity wide to race_ethnicity path on CAS 
+
+write.csv(race_ethnicity_wide, file = paste0(root_path, "Race_Ethnicity/race_ethnicity_all_waves_wide.csv"))
+
+```
+
+```{r creating full demo doc}
+
+## wide format 
+
+whole_demo <- full_join(gender_wide, race_ethnicity_wide, by = "tagid")
+
+whole_demo <- full_join(whole_demo, ses_wide, by = "tagid")
+
+whole_demo <- whole_demo %>% 
+  select(-`1_age.x`, -`1_age.y`, -`2_age.x`, -`2_age.y`, -`3_age.x`, -`3_age.y`)
+
+write.csv(whole_demo, file = paste0(root_path, "all_waves_comp/all_demographics_all_wave_wide.csv"))
+
+## long format
+
+whole_demo_long <- full_join(gender_cleaned, race_ethnicity_cleaned, by = "tagid")
+
+whole_demo_long <- full_join(whole_demo_long, ses_cleaned, by = "tagid")
+
+whole_demo_long <- whole_demo_long %>% 
+  select(-wave.x, -wave.y, -age.x, -age.y)
+
+whole_demo_long <- whole_demo_long[c(1,29,30,2:28)]
+
+whole_demo_long <- whole_demo_long[!duplicated(whole_demo_long),]
+
+whole_demo_long <- pivot_longer(whole_demo_long, names_to = "variable", values_to = "values", cols = 3:30)
+  
+write.csv(whole_demo_long, file = paste0(root_path, "all_waves_comp/all_demographics_all_wave_long.csv"))
+
+```
+
+```{r getting stats for gender}
+
+names <- c(2:10, 17:23, 31:37, 45:51, 53,55, 57, 59, 61:64, 66, 68, 70, 72:75, 77, 79, 81,83:85)
+colnames(whole_demo) <- paste("W", colnames(whole_demo), sep = "")
+colnames(whole_demo)[1] <- "tagid"
+
+## gender 
+
+whole_demo[,names] <- as.data.frame(apply(whole_demo[, names], 2, as.numeric))
+
+whole_demo <- whole_demo[!duplicated(whole_demo),]
+
+# wave 1 adol KSADS 
+female_w1_adol_ksads <- sum(whole_demo$W1_gender_ksads == 2, na.rm = TRUE) ## 172
+male_w1_adol_ksads <- sum(whole_demo$W1_gender_ksads == 1, na.rm = TRUE) ## 0
+other_w1_adol_ksads <- sum(whole_demo$W1_gender_ksads == 3, na.rm = TRUE) ## 2
+
+# wave 1 par report of kiddo gender 
+female_w1_par_ksads <- sum(whole_demo$W1_gender_par_ksads == 2, na.rm = TRUE) ## 171
+male_w1_par_ksads <- sum(whole_demo$W1_gender_par_ksads == 1, na.rm = TRUE) ## 1
+other_w1_par_ksads <- sum(whole_demo$W1_gender_par_ksads == 3, na.rm = TRUE) ## 2
+
+# wave 1 kiddo YRBS report of gender 
+female_w1_yrbs <- sum(whole_demo$W1_gender_yrbs == 1, na.rm = TRUE) ## 145
+male_w1_yrbs <- sum(whole_demo$W1_gender_yrbs == 0, na.rm = TRUE) ## 0
+other_w1_yrbs <- sum(whole_demo$W1_gender_yrbs == 2, na.rm = TRUE) ## 3
+
+# wave 2 adol KSADS 
+female_w2_adol_ksads <- sum(whole_demo$W2_gender_ksads == 2, na.rm = TRUE) ## 159
+male_w2_adol_ksads <- sum(whole_demo$W2_gender_ksads == 1, na.rm = TRUE) ## 0
+other_w2_adol_ksads <- sum(whole_demo$W2_gender_ksads == 3, na.rm = TRUE) ## 3
+
+# wave 2 par report of kiddo gender 
+female_w2_par_ksads <- sum(whole_demo$W2_gender_par_ksads == 2, na.rm = TRUE) ## 152
+male_w2_par_ksads <- sum(whole_demo$W2_gender_par_ksads == 1, na.rm = TRUE) ## 1
+other_w2_par_ksads <- sum(whole_demo$W2_gender_par_ksads == 3, na.rm = TRUE) ## 2
+
+# wave 2 kiddo YRBS report of gender 
+female_w2_yrbs <- sum(whole_demo$W2_gender_yrbs == 1, na.rm = TRUE) ## 148 
+male_w2_yrbs <- sum(whole_demo$W2_gender_yrbs == 0, na.rm = TRUE) ## 1
+other_w2_yrbs <- sum(whole_demo$W2_gender_yrbs == 2, na.rm = TRUE) ## 4 
+
+# wave 3 adol KSADS 
+female_W3_adol_ksads <- sum(whole_demo$W3_gender_ksads == 2, na.rm = TRUE) ## 124
+male_W3_adol_ksads <- sum(whole_demo$W3_gender_ksads == 1, na.rm = TRUE) ## 0
+other_W3_adol_ksads <- sum(whole_demo$W3_gender_ksads == 3, na.rm = TRUE) ## 5
+
+# wave 3 par report of kiddo gender 
+female_W3_par_ksads <- sum(whole_demo$W3_gender_par_ksads == 2, na.rm = TRUE) ## 125
+male_W3_par_ksads <- sum(whole_demo$W3_gender_par_ksads == 1, na.rm = TRUE) ## 1
+other_W3_par_ksads <- sum(whole_demo$W3_gender_par_ksads == 3, na.rm = TRUE) ##3
+
+# wave 3 kiddo YRBS report of gender 
+female_W3_yrbs <- sum(whole_demo$W3_gender_yrbs == 1, na.rm = TRUE) ## 117
+male_W3_yrbs <- sum(whole_demo$W3_gender_yrbs == 0, na.rm = TRUE) ## 0
+other_W3_yrbs <- sum(whole_demo$W3_gender_yrbs == 2, na.rm = TRUE) ## 6 
+
+
+```
+
+
