@@ -414,8 +414,11 @@ whole_predicted <- whole_predicted %>%
 
 whole_predicted <- whole_predicted[,-c(5,9,14,19,23,25,29,31,34)]
 colnames(whole_predicted) <- c("tagid", "dob", "w1s1_date", "w1s1_age", "w1s2_date", "w1s2_age", "w2s1_date", "w2s1_age", "w2s2_date", "w2s2_age", "w3s1_date", "w3s1_age", "w3s2_date", "w3s2_age", "w4s1_date", "w4s1_age", "w4s2_date", "w4s2_age", "w5s1_projected_date", "w5s1_projected_age", "w5s2_projected_date", "w5s2_projected_age", "w6s1_projected_date", "w6s1_projected_age", "w6s2_projected_date", "w6s2_projected_age")
+```
 
 ### creating NA for W4 values for folks who are skipping or have passed time lapse for W4 
+
+```{r}
 
 colnames(skipped)[1] <- "tagid"
 skipped_w4 <- subset(whole_predicted, (tagid %in% skipped$tagid))
