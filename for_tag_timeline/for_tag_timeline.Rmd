@@ -239,7 +239,7 @@ w4s2 <- w4s2 %>%
 w4s2$age_w4s2 <- age_calc(w4s2$dob, enddate = w4s2$sb_date, units = "years", precise = TRUE)
 
 w5s1 <- w4s1[, c(1, 3)]
-w5s1$lapse_predicted <- runif(77, 14, 18) 
+w5s1$lapse_predicted <- runif(83, 14, 18) 
 w5s2 <- w5s1[, c(1,2,3)]
 w5s2$lapse_predicted <- w5s2$lapse_predicted + 1
 w5s1$lapse_predicted <- as.integer(w5s1$lapse_predicted)
@@ -269,7 +269,7 @@ w5s2 <- w5s2[,-c(3)]
 
 w6s1 <- w5s1[, c(1, 2)]
 w6s2 <- w5s2[, c(1, 2)]
-w6s1$lapse_predicted <- runif(77, 7, 9) 
+w6s1$lapse_predicted <- runif(83, 7, 9) 
 w6s2$lapse_predicted <- w6s1$lapse_predicted
 w6s1$lapse_predicted <- as.integer(w6s1$lapse_predicted)
 w6s2$lapse_predicted <- as.integer(w6s2$lapse_predicted)
@@ -326,7 +326,7 @@ w4_projected$w4s2_age <- age_calc(w4_projected$dob, enddate = w4_projected$sb_da
 
 w5s1_predicted <- w4_projected[c(1,2,3)]
 w5s2_predicted <- w4_projected[c(1,2,4)]
-w5s1_predicted$lapse_predicted <- runif(67, 14, 16) 
+w5s1_predicted$lapse_predicted <- runif(59, 14, 16) 
 w5s2_predicted$lapse_predicted <- w5s1_predicted$lapse_predicted
 w5s1_predicted$lapse_predicted <- as.integer(w5s1_predicted$lapse_predicted)
 w5s2_predicted$lapse_predicted <- as.integer(w5s2_predicted$lapse_predicted)
@@ -351,7 +351,7 @@ w5s2_predicted$w5s2_age <- age_calc(w5s2_predicted$dob, enddate = w5s2_predicted
 
 w6s1_predicted <- w5s1_predicted[, c(1, 2, 3)]
 w6s2_predicted <- w5s2_predicted[, c(1, 2, 3)]
-w6s1_predicted$w6s1_lapse_predicted <- runif(67, 7, 12)
+w6s1_predicted$w6s1_lapse_predicted <- runif(59, 7, 12)
 w6s2_predicted$w6s2_lapse_predicted <- w6s1_predicted$w6s1_lapse_predicted
 w6s1_predicted$w6s1_lapse_predicted <- as.integer(w6s1_predicted$w6s1_lapse_predicted)
 w6s2_predicted$w6s2_lapse_predicted <- as.integer(w6s2_predicted$w6s2_lapse_predicted)
@@ -400,6 +400,8 @@ whole_actual <- full_join(whole_actual, full_join(w6s1, w6s2), by = "subject_spi
 whole_actual <- whole_actual[,-c(5,9,14,19,28,23)]
 colnames(whole_actual) <- c("tagid", "dob", "w1s1_date", "w1s1_age", "w1s2_date", "w1s2_age", "w2s1_date", "w2s1_age", "w2s2_date", "w2s2_age", "w3s1_date", "w3s1_age", "w3s2_date", "w3s2_age", "w4s1_date", "w4s1_age", "w4s2_date", "w4s2_age", "w5s1_projected_date", "w5s1_projected_age", "w5s2_projected_date", "w5s2_projected_age", "w6s1_projected_date", "w6s1_projected_age", "w6s2_projected_date", "w6s2_projected_age")
 
+write.csv(whole_actual, file = paste0(root_path, "output/whole_actual.csv"))
+
 ## PREDICTED DOC 
 
 whole_predicted <- full_join(w1s1, w1s2, by = "subject_spit_id")
@@ -414,6 +416,9 @@ whole_predicted <- whole_predicted %>%
 
 whole_predicted <- whole_predicted[,-c(5,9,14,19,23,25,29,31,34)]
 colnames(whole_predicted) <- c("tagid", "dob", "w1s1_date", "w1s1_age", "w1s2_date", "w1s2_age", "w2s1_date", "w2s1_age", "w2s2_date", "w2s2_age", "w3s1_date", "w3s1_age", "w3s2_date", "w3s2_age", "w4s1_date", "w4s1_age", "w4s2_date", "w4s2_age", "w5s1_projected_date", "w5s1_projected_age", "w5s2_projected_date", "w5s2_projected_age", "w6s1_projected_date", "w6s1_projected_age", "w6s2_projected_date", "w6s2_projected_age")
+
+write.csv(whole_predicted, file = paste0(root_path, "output/whole_predicted.csv"))
+
 ```
 
 ### creating NA for W4 values for folks who are skipping or have passed time lapse for W4 
