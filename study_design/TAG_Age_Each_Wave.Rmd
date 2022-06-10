@@ -47,7 +47,7 @@ pacman::p_load(dplyr, ggplot2, install = TRUE)
 ## cfm root path
 
 # root_path = "~/Desktop/Repos/tag/"
-root_path = "~/Desktop/projects/tag/study_design/"
+root_path = "/Volumes/psych-cog/dsnlab/TAG/behavior/Demographics/Age/timeline/"
 
 ```
 ### pulling in data
@@ -56,15 +56,44 @@ root_path = "~/Desktop/projects/tag/study_design/"
 
 ## importing doc pulled from redcap with IDs and all session dates
 
-long_doc <- read.csv(paste0(root_path, "long_doc.csv"),
-                     stringsAsFactors = FALSE)
+w1 <- read.csv(paste0(root_path, "w1_dates.csv"),
+                     stringsAsFactors = FALSE) %>% 
+  select(subject_spit_id, sa_date) %>% 
+  mutate(W1_date = sa_date) %>% 
+  select(-sa_date)
 
-ace <- read.csv(paste0(root_path, "age_ACE.csv"),
+w2 <- read.csv(paste0(root_path, "w2_dates.csv"),
+                     stringsAsFactors = FALSE) %>% 
+  select(subject_spit_id, sa_date) %>% 
+  mutate(W2_date = sa_date) %>% 
+  select(-sa_date)
+
+w3 <- read.csv(paste0(root_path, "w3_dates.csv"),
+                     stringsAsFactors = FALSE) %>% 
+  select(subject_spit_id, sa_date) %>% 
+  mutate(W3_date = sa_date) %>% 
+  select(-sa_date)
+
+w4 <- read.csv(paste0(root_path, "w4_dates.csv"),
+                     stringsAsFactors = FALSE) %>% 
+  select(subject_spit_id, sa_date) %>% 
+  mutate(W4_date = sa_date) %>% 
+  select(-sa_date)
+
+w5 <- read.csv(paste0(root_path, "w5_dates.csv"),
+                     stringsAsFactors = FALSE) %>% 
+  select(subject_spit_id, sa_date) %>% 
+  mutate(W5_date = sa_date) %>% 
+  select(-sa_date)
+
+ace <- read.csv(paste0(root_path, "ace.csv"),
                 stringsAsFactors = FALSE)
 
-dob <- read.csv(paste0(root_path, "TAG_DOB_SessionDates.csv"),
-                stringsAsFactors = FALSE) %>%
-  select(tagid, dob)
+sos <- read.csv(paste0(root_path, "sos.csv"),
+                stringsAsFactors = FALSE)
+
+dob <- read.csv(paste0(root_path, "dob.csv"),
+                stringsAsFactors = FALSE) 
 
 ```
 ### loading in age calc function
@@ -147,52 +176,114 @@ age_calc <- function(dob, enddate=Sys.Date(), units='months', precise=TRUE){
 
 ```{r Merging and cleaning docs}
 
+## whole doc 
+
+whole <- full_join(w1, full_join(w2,w3, by = "subject_spit_id"), by = "subject_spit_id")
+whole <- full_join(whole, full_join(w4, w5, by = "subject_spit_id"), by = "subject_spit_id")
+
+whole <- tidyr::pivot_longer(whole, col = 2:6, names_to = "wave", values_to = "session_date")
+
+#import "overview" document so that we can filter analyses to subjects that were not excluded
+
+overview <- readxl::read_xlsx('/Volumes/psych-cog/dsnlab/TAG/behavior/Overview/Overview_Withdrawn_Completed/TAG_Overview_Doc.xlsx',1) %>% 
+  select(TAG_ID, Withdrawn_W1)
+
+overview <- overview[which(overview$Withdrawn_W1 == "0"),]
+
+whole <- whole[which(whole$subject_spit_id %in% overview$TAG_ID),]
+
 ## TAG General merge
 
-whole <- full_join(long_doc, dob, by="tagid") %>%
+whole <- full_join(whole, dob, by="subject_spit_id") %>%
    filter(!is.na(session_date),
           !is.na(dob))
 
 ## converting to date class
 
-whole$session_date <- as.Date(whole$session_date, format = "%m/%d/%Y")
-whole$dob <- as.Date(whole$dob, format = "%m/%d/%Y")
+whole$session_date <- as.Date(whole$session_date, format = "%Y-%m-%d")
+whole$dob <- as.Date(whole$dob, format = "%Y-%m-%d")
+whole <- whole %>% 
+  filter(!is.na(session_date))
 
 ## calculating age from DOB & session dates
 
 whole$age <- age_calc(whole$dob, enddate = whole$session_date, units = "years", precise = TRUE)
 
-## converting ace session dates to date class for merge
+## ACE merge
 
-#ace$session_date <- as.Date(ace$session_date)
+ace <- ace[-2]
 
-## merging data sets
+ace <- tidyr::pivot_longer(ace, col = 2:4, values_to = "session_date", names_to = "wave")
 
-#whole <- full_join(age_all, ace)
+ace <- full_join(ace, dob, by="subject_spit_id") %>%
+   filter(!is.na(session_date),
+          !is.na(dob))
+
+## converting to date class
+
+ace <- ace %>% 
+  mutate_all(na_if,"") %>% 
+  filter(!is.na(session_date))
+
+ace$session_date <- as.Date(ace$session_date, format = "%Y-%m-%d")
+ace$dob <- as.Date(ace$dob, format = "%Y-%m-%d")
+
+## calculating age from DOB & session dates
+
+ace$age <- age_calc(ace$dob, enddate = ace$session_date, units = "years", precise = TRUE)
+
+## SOS 
+
+colnames(sos) <- c("subject_spit_id", "wave", "session_date")
+
+sos <- full_join(sos, dob, by="subject_spit_id") %>%
+   filter(!is.na(session_date),
+          !is.na(dob))
+
+## converting to date class
+
+sos <- sos %>% 
+  mutate_all(na_if,"") %>% 
+  filter(!is.na(session_date))
+
+sos$session_date <- as.Date(sos$session_date, format = "%Y-%m-%d")
+sos$dob <- as.Date(sos$dob, format = "%Y-%m-%d")
+
+## calculating age from DOB & session dates
+
+sos$age <- age_calc(sos$dob, enddate = sos$session_date, units = "years", precise = TRUE)
+
+##WHOLE DOC 
+
+whole <- full_join(whole, ace)
+whole <- full_join(whole, sos)
+whole <- whole[-c(4,5)]
 
 ## renaming wave labels to be more readable
 
 whole <- whole %>%
-  mutate(wave=ifelse(wave=="wave_1_scheduling_arm_1", "W1",
-                           ifelse(wave=="wave_2_scheduling_arm_1","W2",
-                                  ifelse(wave=="wave_3_scheduling_arm_1","W3",
-                                         ifelse(wave=="wave_4_scheduling_arm_1", "W4",
-                                                ifelse(wave=="sos_arm_1","SOS1",
-                                                       ifelse(wave=="C1","COV1",
-                                                              ifelse(wave=="C2","COV2",
-                                                                     ifelse(wave=="C3", "COV3",
-                              wave))))))))) %>%
+  mutate(wave=ifelse(wave=="W1_date", "W1",
+                           ifelse(wave=="W2_date","W2",
+                                  ifelse(wave=="W3_date","W3",
+                                         ifelse(wave=="W4_date", "W4",
+                                                ifelse(wave == "W5_date", "W5",
+                                                  ifelse(wave=="sos_arm_1","SOS1",
+                                                       ifelse(wave=="ace_month1_date","COV1",
+                                                              ifelse(wave=="ace_month2_date","COV2",
+                                                                     ifelse(wave=="ace_month3_date_3", "COV3",
+                              wave)))))))))) %>%
   mutate(wave=as.factor(wave))
 
 ## reordering levels
 
-whole$wave <- factor(whole$wave, levels=c("W1", "W2", "SOS1", "W3", "COV1", "W4", "COV2", "COV3"))
+whole$wave <- factor(whole$wave, levels=c("W1", "W2", "SOS1", "W3", "COV1", "W4", "COV2", "COV3", "W5"))
 
 
 ```
 
 ```{r actual study design graph w/ shapes !!}
 
+colnames(whole)[1] <- "tagid"
 ## creating a doc ordering IDs by timepoints, age and ID
 
 study_design <- whole[order(whole$wave, whole$age, whole$tagid),]
@@ -212,13 +303,15 @@ tag_study_design_plot<- ggplot(whole,
                                shape=wave)) +
   geom_point(alpha=1) +
   geom_line(alpha=.4) +
+  expand_limits(y=c(0,186))+
+  expand_limits(x=c(10,20)) +
   theme(axis.text.y = element_blank()) +
   scale_color_manual(name= "Wave",
-                     labels = c("W1", "W2", "SOS1", "W3", "COV1", "COV2", "COV3", "W4"),
-                     values = c("#5445b1", "#749dae", "#f3c483", "#5c1a33", "#cd3341","#FE5D26", "#FFA0AC", "#B4DC7F"))  +
+                     labels = c("W1", "W2", "SOS1", "W3", "COV1", "COV2", "COV3", "W4", "W5"),
+                     values = c("#5445b1", "#749dae", "#f3c483", "#5c1a33", "#cd3341","#FE5D26", "#FFA0AC", "#B4DC7F", "purple"))  +
   scale_shape_manual(name= "Wave",
-              labels= c("W1", "W2", "SOS1", "W3", "COV1", "COV2", "COV3", "W4"),
-              values = c(0, 1, 2, 5, 6, 7, 10, 14))+
+              labels= c("W1", "W2", "SOS1", "W3", "COV1", "COV2", "COV3", "W4", "W5"),
+              values = c(0, 1, 2, 5, 6, 7, 10, 14, 15))+
   ylab("") +
   xlab("Age (years)")+
   scale_y_discrete(breaks=NULL) +
@@ -230,9 +323,8 @@ print(tag_study_design_plot)
 
 ## saving png of plot
 
-ggsave(filename="tag_study_design_w_shapes.png",
+ggsave(filename=paste0(root_path,"output/tag_study_design_w_shapes.png"),
        plot=tag_study_design_plot, width=6, height=5, units='in', dpi=300)
-
 
 
 ```
@@ -293,7 +385,7 @@ print(tag_waves_study_design_plot)
 
 ## saving png of plot
 
-ggsave(filename="tag_wave_study_design.png",
+ggsave(filename="tag_wave_precovid_study_design.png",
        plot=tag_waves_study_design_plot, width=5, height=5, units='in', dpi=600, bg = "transparent")
 
 
@@ -364,28 +456,23 @@ ggsave(filename="tag_waves_sos_design_w_shapes.png",
 
 ## sorting IDs by number of timepoints
 
-ace <- ace %>%
-  mutate(wave=ifelse(wave=="C1","COV1",
-                     ifelse(wave=="C2","COV2",
-                            ifelse(wave=="C3", "COV3",
-                              wave)))) %>%
-  mutate(wave=as.factor(wave))
+ace <- whole[which(whole$wave == "COV1" & whole$wave == "COV2" & whole$wave == "COV3"),]
 
 ## creating a doc ordering IDs by timepoints, age and ID
 
-study_design_ace <- ace[order(ace$wave, ace$age, ace$TAGID),]
+study_design_ace <- ace[order(ace$wave, ace$age, ace$tagid),]
 
 ## creating levels using ordered doc
 
 ace <- study_design_ace %>%
-  mutate(Rank_nr=as.numeric(factor(TAGID,levels=unique(TAGID))))
+  mutate(Rank_nr=as.numeric(factor(tagid,levels=unique(tagid))))
 
 ## creating visualization
 
 ace_study_design_plot<- ggplot(ace,
                            aes(x=age,
                                y=Rank_nr,
-                               group=TAGID,
+                               group=tagid,
                                col=wave,
                                shape=wave)) +
   geom_point(alpha=1) +
@@ -415,31 +502,28 @@ ggsave(filename="ace_study_design_w_shapes.png",
 
 ```{r adding session dates for W4 to TAG_DOB}
 
-dob_full <- read.csv(paste0(root_path, "TAG_DOB_SessionDates.csv"),
-                stringsAsFactors = FALSE)
+dob_full <- read.csv("/Volumes/psych-cog/dsnlab/TAG/behavior/Demographics/Age/TAG_DOB_SessionDates.csv",
+                stringsAsFactors = FALSE) %>% 
+  select(-W4S1_Date, -W4S1_Age_Months)
 
-w4_dates_s1 <- read.csv(paste0(root_path, "W4_S1_complete.csv"),
-                stringsAsFactors = FALSE)
-
-w4_dates_s1 <-w4_dates_s1 %>%
+w4 <-w4 %>%
   mutate(no_underscores=paste0("TAG",
-                               substring(tagid,first=5,last=length(tagid))))
- w4_dates_s1 <- w4_dates_s1[c(-1)]
- w4_dates_s1 <- w4_dates_s1[c(2,1)]
- colnames(w4_dates_s1)[1] <- "tagid"
+                               substring(subject_spit_id,first=5,last=length(subject_spit_id))))
+ w4 <- w4[c(-1)]
+ w4 <- w4[c(2,1)]
+ colnames(w4) <- c("tagid", "W4S1_Date")
 
-w4_dates_s2 <- read.csv(paste0(root_path, "W4_completed_S2.csv"),
-                stringsAsFactors = FALSE)
 
-w4_dates_s2 <-w4_dates_s2 %>%
+w5 <- w5 %>%
   mutate(no_underscores=paste0("TAG",
-                               substring(tagid,first=5,last=length(tagid))))
- w4_dates_s2 <- w4_dates_s2[c(-1)]
- w4_dates_s2 <- w4_dates_s2[c(2,1)]
- colnames(w4_dates_s2)[1] <- "tagid"
+                               substring(subject_spit_id,first=5,last=length(subject_spit_id))))
 
-dob_full <- full_join(dob_full, w4_dates_s1, by = "tagid")
-dob_full <- full_join(dob_full, w4_dates_s2, by = "tagid")
+w5 <- w5[c(-1)]
+w5 <- w5[c(2,1)]
+colnames(w5) <- c("tagid", "W5S1_Date")
+
+dob_full <- full_join(dob_full, w4, by = "tagid")
+dob_full <- full_join(dob_full, w5, by = "tagid")
 
 dob_full  <- dob_full[c(1,2,3,4,5,6,7,8,17,18,9,10,11,12,13,14,15,16)]
 
